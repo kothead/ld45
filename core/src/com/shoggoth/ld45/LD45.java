@@ -1,33 +1,36 @@
 package com.shoggoth.ld45;
 
-import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.kothead.gdxjam.base.GdxJamGame;
+import com.kothead.gdxjam.base.context.DefaultContext;
+import com.kothead.gdxjam.base.data.GdxJamConfiguration;
+import com.kothead.gdxjam.base.screen.LoadingScreen;
+import com.shoggoth.ld45.screen.GameScreen;
 
-public class LD45 extends ApplicationAdapter {
-	SpriteBatch batch;
-	Texture img;
-	
+public class LD45 extends GdxJamGame {
+
+	public LD45() {
+		super(new GameConfiguration());
+	}
+
 	@Override
 	public void create () {
-		batch = new SpriteBatch();
-		img = new Texture("badlogic.jpg");
+		super.create();
+		showGameScreen();
 	}
 
-	@Override
-	public void render () {
-		Gdx.gl.glClearColor(1, 0, 0, 1);
-		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-		batch.begin();
-		batch.draw(img, 0, 0);
-		batch.end();
+	public void showGameScreen() {
+		getStateMachine().changeState(
+				DefaultContext.create(
+						new GameScreen.Builder(),
+						new LoadingScreen.Builder()
+						// TODO: add assets here
+				));
 	}
-	
-	@Override
-	public void dispose () {
-		batch.dispose();
-		img.dispose();
+
+	public static class GameConfiguration extends GdxJamConfiguration {
+		GameConfiguration() {
+			width = 720;
+			height = 1280;
+		}
 	}
 }

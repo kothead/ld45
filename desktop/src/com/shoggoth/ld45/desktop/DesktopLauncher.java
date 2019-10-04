@@ -7,6 +7,12 @@ import com.shoggoth.ld45.LD45;
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		new LwjglApplication(new LD45(), config);
+		LD45 game = new LD45();
+
+		config.width = game.getConfiguration().height;
+		config.height = game.getConfiguration().width;
+		config.samples = 8;
+		config.resizable = false;
+		new LwjglApplication(game, config);
 	}
 }
