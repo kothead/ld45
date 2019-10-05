@@ -36,6 +36,7 @@ public class GameScreen extends BaseScreen {
 
     protected void layout(int width, int height) {
         manager = new EntityManager(GdxJam.engine(), this, renderConfig);
+        field[0][0] = manager.addCard(0,0);
     }
 
     @Override

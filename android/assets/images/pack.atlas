@@ -1,13 +1,55 @@
 
 pack.png
-size: 512,512
+size: 1024,256
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
-badlogic
+background
   rotate: false
   xy: 2, 2
-  size: 256, 256
-  orig: 256, 256
+  size: 140, 196
+  orig: 140, 196
+  offset: 0, 0
+  index: -1
+border
+  rotate: false
+  xy: 146, 2
+  size: 140, 196
+  orig: 140, 196
+  offset: 0, 0
+  index: -1
+cosmetic
+  rotate: false
+  xy: 290, 2
+  size: 140, 196
+  orig: 140, 196
+  offset: 0, 0
+  index: -1
+ground
+  rotate: false
+  xy: 434, 2
+  size: 140, 196
+  orig: 140, 196
+  offset: 0, 0
+  index: -1
+presence
+  rotate: false
+  xy: 578, 2
+  size: 140, 196
+  orig: 140, 196
+  offset: 0, 0
+  index: -1
+river
+  rotate: false
+  xy: 722, 2
+  size: 140, 196
+  orig: 140, 196
+  offset: 0, 0
+  index: -1
+skeleton
+  rotate: false
+  xy: 866, 2
+  size: 140, 196
+  orig: 140, 196
   offset: 0, 0
   index: -1

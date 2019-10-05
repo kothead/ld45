@@ -22,8 +22,14 @@ public class LD45 extends GdxJamGame {
 		getStateMachine().changeState(
 				DefaultContext.create(
 						new GameScreen.Builder(),
-						new LoadingScreen.Builder()
-						// TODO: add assets here
+						new LoadingScreen.Builder(),
+						Assets.images.BORDER,
+						Assets.images.BACKGROUND,
+						Assets.images.RIVER,
+						Assets.images.GROUND,
+						Assets.images.PRESENCE,
+						Assets.images.SKELETON,
+						Assets.images.COSMETIC
 				));
 	}
 

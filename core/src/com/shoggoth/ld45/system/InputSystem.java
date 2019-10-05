@@ -64,6 +64,7 @@ public class InputSystem extends EntitySystem implements InputProcessor {
         }
 
         screen.shapes().setProjectionMatrix(screen.getCamera().combined);
+        screen.batch().setProjectionMatrix(screen.getCamera().combined);
     }
 
     @Override
