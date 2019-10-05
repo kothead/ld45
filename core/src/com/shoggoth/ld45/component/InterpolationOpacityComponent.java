@@ -25,4 +25,8 @@ public class InterpolationOpacityComponent implements Component{
         this.to = to;
         elapsed = 0.0f;
     }
+
+    public float getInterpolatedValue() {
+        return interpolation.apply(from, to, elapsed / duration);
+    }
 }
