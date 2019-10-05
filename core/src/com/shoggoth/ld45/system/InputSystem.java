@@ -2,6 +2,7 @@ package com.shoggoth.ld45.system;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.EntitySystem;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Camera;
@@ -39,8 +40,8 @@ public class InputSystem extends EntitySystem implements InputProcessor {
         if (isDragging) {
             Camera camera = screen.getCamera();
 
-            float x = delta.x / 3 * -1;
-            float y = delta.y / 3;
+            float x = -delta.x;
+            float y = delta.y;
 
             x = screen.getCamera().position.x + x;
             y = screen.getCamera().position.y + y;
@@ -53,6 +54,8 @@ public class InputSystem extends EntitySystem implements InputProcessor {
 
             screen.getCamera().position.set(x, y, 0);
             screen.getCamera().update();
+
+            delta.setZero();
         }
 
         screen.shapes().setProjectionMatrix(screen.getCamera().combined);
@@ -97,6 +100,7 @@ public class InputSystem extends EntitySystem implements InputProcessor {
             // delta will now hold the difference between the last and the current touch positions
             // delta.x > 0 means the touch moved to the right, delta.x < 0 means a move to the left
             delta = newTouch.cpy().sub(lastTouch);
+
             lastTouch = newTouch;
         }
         return false;
