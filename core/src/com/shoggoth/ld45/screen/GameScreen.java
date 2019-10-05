@@ -1,5 +1,6 @@
 package com.shoggoth.ld45.screen;
 
+import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.kothead.gdxjam.base.GdxJam;
@@ -7,13 +8,20 @@ import com.kothead.gdxjam.base.GdxJamGame;
 import com.kothead.gdxjam.base.screen.BaseScreen;
 import com.kothead.gdxjam.base.screen.ScreenBuilder;
 import com.shoggoth.ld45.EntityManager;
+import com.shoggoth.ld45.util.RenderConfig;
 
 public class GameScreen extends BaseScreen {
 
     private EntityManager manager;
+    private RenderConfig renderConfig = new RenderConfig();
 
-    public GameScreen(GdxJamGame game) {
+    private Entity[][] field;
+
+    public GameScreen(GdxJamGame game, int fieldWidth, int fieldHeight) {
         super(game);
+        field = new Entity[fieldHeight][fieldWidth];
+        renderConfig.setFieldWidth(fieldWidth);
+        renderConfig.setFieldHeight(fieldHeight);
     }
 
     @Override
@@ -27,7 +35,7 @@ public class GameScreen extends BaseScreen {
     }
 
     protected void layout(int width, int height) {
-        manager = new EntityManager(GdxJam.engine(), this);
+        manager = new EntityManager(GdxJam.engine(), this, renderConfig);
     }
 
     @Override
@@ -44,11 +52,24 @@ public class GameScreen extends BaseScreen {
         manager.dispose();
     }
 
+    public Entity[][] getField() {
+        return field;
+    }
+
     public static final class Builder implements ScreenBuilder<GameScreen> {
+
+        private int fieldWidth = 10;
+        private int fieldHeight = 10;
 
         @Override
         public GameScreen build(GdxJamGame game) {
-            return new GameScreen(game);
+            return new GameScreen(game, fieldWidth, fieldHeight);
+        }
+
+        public Builder setFieldSize(int width, int height) {
+            this.fieldWidth = width;
+            this.fieldHeight = height;
+            return this;
         }
     }
 }
