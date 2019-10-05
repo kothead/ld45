@@ -4,10 +4,10 @@ public class RenderConfig {
 
     private int fieldWidth;
     private int fieldHeight;
-    private int cardWidth = 30;
-    private int cardHeight = 40;
+    private int cardWidth = 140;
+    private int cardHeight = 196;
     private int padding = 8;
-    private int margin = 20;
+    private int margin = 100;
 
     public void setCardWidth(int cardWidth) {
         this.cardWidth = cardWidth;

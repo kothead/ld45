@@ -31,6 +31,7 @@ public class LD45 extends GdxJamGame {
 		GameConfiguration() {
 			width = 720;
 			height = 1280;
+			scaleFactor = 1.0f;
 		}
 	}
 }
