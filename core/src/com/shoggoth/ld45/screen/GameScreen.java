@@ -7,9 +7,14 @@ import com.kothead.gdxjam.base.GdxJam;
 import com.kothead.gdxjam.base.GdxJamGame;
 import com.kothead.gdxjam.base.screen.BaseScreen;
 import com.kothead.gdxjam.base.screen.ScreenBuilder;
+import com.kothead.gdxjam.base.util.Direction;
 import com.shoggoth.ld45.EntityManager;
+import com.shoggoth.ld45.component.SelectableComponent;
 import com.shoggoth.ld45.component.SelectedComponent;
 import com.shoggoth.ld45.util.RenderConfig;
+
+import java.util.Collections;
+import java.util.List;
 
 public class GameScreen extends BaseScreen {
 
@@ -44,6 +49,7 @@ public class GameScreen extends BaseScreen {
         }
 
         manager.attach(field[0][0], manager.addCard(0,0));
+        field[0][0].add(new SelectableComponent());
     }
 
     @Override
@@ -75,6 +81,41 @@ public class GameScreen extends BaseScreen {
             }
         }
         return false;
+    }
+
+    public void setNonSelectable() {
+        for (int i = 0; i < renderConfig.getFieldHeight(); i++) {
+            for (int j = 0; j < renderConfig.getFieldWidth(); j++) {
+                Entity entity = getField()[i][j];
+                entity.remove(SelectableComponent.class);
+            }
+        }
+    }
+
+    public void setSelectable(int x, int y) {
+        setSelectable(x, y, Collections.EMPTY_LIST, true);
+    }
+
+    public void setSelectable(int x, int y, List<Direction> directions) {
+        setSelectable(x, y, directions, false);
+    }
+
+    public void setSelectable(int x, int y, List<Direction> directions, boolean selectSelf) {
+        setNonSelectable();
+        if (x >= 0 && y >= 0 && x < renderConfig.getFieldWidth() && y < renderConfig.getFieldHeight()) {
+            if (selectSelf) {
+                Entity entity = getField()[y][x];
+                entity.add(new SelectableComponent());
+            }
+            for (Direction direction : directions) {
+                int newX = x + direction.getDx();
+                int newY = y + direction.getDy();
+                if (newX >= 0 && newY >= 0 && newX < renderConfig.getFieldWidth() && newY < renderConfig.getFieldHeight()) {
+                    Entity entity = getField()[newY][newX];
+                    entity.add(new SelectableComponent());
+                }
+            }
+        }
     }
 
     public static final class Builder implements ScreenBuilder<GameScreen> {

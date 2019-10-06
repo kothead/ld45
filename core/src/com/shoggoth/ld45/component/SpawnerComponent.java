@@ -3,6 +3,10 @@ package com.shoggoth.ld45.component;
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
+import com.kothead.gdxjam.base.util.Direction;
+
+import java.util.List;
+import java.util.ArrayList;
 
 public class SpawnerComponent implements Component {
     public static final ComponentMapper<SpawnerComponent> mapper = ComponentMapper.getFor(SpawnerComponent.class);
@@ -10,6 +14,13 @@ public class SpawnerComponent implements Component {
     public int spawnCount;
     public int healthBuff = 0;
     public int damageBuff = 0;
+
+    public List<Direction> directions = new ArrayList<Direction>() {{
+        add(Direction.DOWN);
+        add(Direction.UP);
+        add(Direction.LEFT);
+        add(Direction.RIGHT);
+    }};
 
     private Spawner spawner;
 

@@ -2,18 +2,15 @@ package com.shoggoth.ld45;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.kothead.gdxjam.base.component.PositionComponent;
 import com.kothead.gdxjam.base.component.SpriteComponent;
 import com.kothead.gdxjam.base.system.RenderSystem;
-import com.shoggoth.ld45.component.AttachComponent;
-import com.shoggoth.ld45.component.CardComponent;
-import com.shoggoth.ld45.component.CellComponent;
-import com.shoggoth.ld45.component.SelectableComponent;
+import com.shoggoth.ld45.component.*;
 import com.shoggoth.ld45.screen.GameScreen;
 import com.shoggoth.ld45.system.FieldHighlightRenderSystem;
+import com.shoggoth.ld45.system.GameLogicSystem;
 import com.shoggoth.ld45.system.InputSystem;
 import com.shoggoth.ld45.util.CardSprite;
 import com.shoggoth.ld45.util.RenderConfig;
@@ -38,6 +35,7 @@ public class EntityManager {
         engine.addSystem(new InputSystem(priority++, screen, renderConfig));
         engine.addSystem(new RenderSystem(priority++, screen.batch()));
         engine.addSystem(new FieldHighlightRenderSystem(priority++, screen.shapes(), renderConfig));
+        engine.addSystem(new GameLogicSystem(priority++, screen));
     }
 
     public Entity addCell(int x, int y) {
@@ -46,8 +44,7 @@ public class EntityManager {
         }
 
         Entity entity = new Entity();
-        entity.add(new CellComponent());
-        entity.add(new SelectableComponent());
+        entity.add(new CellComponent(x, y));
         entity.add(new PositionComponent(
                 x * (renderConfig.getCardWidth() + renderConfig.getPadding()) + renderConfig.getMargin(),
                 y * (renderConfig.getCardHeight() + renderConfig.getPadding()) + renderConfig.getMargin(),
@@ -64,7 +61,13 @@ public class EntityManager {
         }
 
         Entity entity = new Entity();
-        entity.add(new SelectableComponent());
+        entity.add(new CardComponent());
+        entity.add(new SpawnerComponent(new SpawnerComponent.Spawner() {
+            @Override
+            public Entity spawn(int x, int y) {
+                return null;
+            }
+        }, 2));
         entity.add(new PositionComponent(
                 (renderConfig.getPadding() + renderConfig.getCardWidth()) * x + renderConfig.getMargin(),
                 (renderConfig.getPadding() + renderConfig.getCardHeight()) * y + renderConfig.getMargin(),
