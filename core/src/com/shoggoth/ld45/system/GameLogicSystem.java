@@ -9,6 +9,7 @@ import com.shoggoth.ld45.EntityManager;
 import com.shoggoth.ld45.component.*;
 import com.shoggoth.ld45.screen.GameScreen;
 import com.shoggoth.ld45.util.RenderConfig;
+import com.shoggoth.ld45.util.Team;
 
 import java.util.*;
 
@@ -30,9 +31,8 @@ public class GameLogicSystem extends EntitySystem {
 
     private ImmutableArray<Entity> cells;
     private ImmutableArray<Entity> spawners;
-    private ImmutableArray<Entity> allies;
+    private ImmutableArray<Entity> creatures;
     private ImmutableArray<Entity> nothings;
-    private ImmutableArray<Entity> enemies;
 
     private ImmutableArray<Entity> sources;
     private ImmutableArray<Entity> targets;
@@ -40,12 +40,14 @@ public class GameLogicSystem extends EntitySystem {
     private GameScreen screen;
     private EntityManager manager;
     private RenderConfig config;
+    private ActionQueue actionQueue;
 
-    public GameLogicSystem(int priority, GameScreen screen, EntityManager manager, RenderConfig config) {
+    public GameLogicSystem(int priority, GameScreen screen, EntityManager manager, RenderConfig config, Team[] teams) {
         super(priority);
         this.screen = screen;
         this.manager = manager;
         this.config = config;
+        this.actionQueue = new ActionQueue(teams);
     }
 
     @Override
@@ -54,9 +56,8 @@ public class GameLogicSystem extends EntitySystem {
 
         cells = engine.getEntitiesFor(Family.all(CellComponent.class).get());
         spawners = engine.getEntitiesFor(Family.all(SpawnerComponent.class).get());
-        allies = engine.getEntitiesFor(Family.all(CreatureComponent.class, AllyComponent.class).get());
+        creatures = engine.getEntitiesFor(Family.all(CreatureComponent.class).get());
         nothings = engine.getEntitiesFor(Family.all(NothingComponent.class).get());
-        enemies = engine.getEntitiesFor(Family.all(CreatureComponent.class, EnemyComponent.class).get());
         sources = engine.getEntitiesFor(Family.all(SelectionSourceComponent.class).get());
         targets = engine.getEntitiesFor(Family.all(SelectionTargetComponent.class).get());
     }
@@ -87,6 +88,9 @@ public class GameLogicSystem extends EntitySystem {
                     //if (AllyComponent.mapper.has(targetCard))
                     attack(sourceCard, targetCard);
                 }
+
+                //TODO: if several targets are available
+                actionQueue.nextAction();
             } else {
                 if (NothingComponent.mapper.has(sourceCard)) {
                     showAvailableBuildings();
@@ -101,12 +105,11 @@ public class GameLogicSystem extends EntitySystem {
                             ),
                             Arrays.asList(source)
                     ));
-                } else if (AllyComponent.mapper.has(sourceCard)) {
+                } else if (isTeammateCreature(sourceCard)) {
                     setSelectable(combine(
                             // TODO: process REAPING and SAINT prefix
-                            without(
+                            withoutTeammates(
                                     adjacent(source, ACTION_DIRECTIONS),
-                                    AllyComponent.mapper,
                                     SpawnerComponent.mapper,
                                     ResourceComponent.mapper
                             ),
@@ -116,9 +119,9 @@ public class GameLogicSystem extends EntitySystem {
             }
         } else {
             setSelectable(combine(
-                    getCellsOf(nothings),
-                    getCellsOf(spawners),
-                    getCellsOf(allies)
+                    getCellsOfTeammate(nothings),
+                    getCellsOfTeammate(spawners),
+                    getCellsOfTeammate(creatures)
             ));
         }
     }
@@ -127,6 +130,16 @@ public class GameLogicSystem extends EntitySystem {
         List<Entity> result = new ArrayList<>();
         for (Entity entity: entities) {
             if (AttachComponent.mapper.has(entity)) {
+                result.add(AttachComponent.mapper.get(entity).entity);
+            }
+        }
+        return result;
+    }
+
+    private List<Entity> getCellsOfTeammate(Iterable<Entity> entities) {
+        List<Entity> result = new ArrayList<>();
+        for (Entity entity: entities) {
+            if (AttachComponent.mapper.has(entity) && isTeammate(entity)) {
                 result.add(AttachComponent.mapper.get(entity).entity);
             }
         }
@@ -174,6 +187,26 @@ public class GameLogicSystem extends EntitySystem {
         }
         return entities;
     }
+
+    private List<Entity> withoutTeammates(List<Entity> entities, ComponentMapper... mappers) {
+        List<Entity> result = without(entities, mappers);
+        Iterator<Entity> iterator = result.iterator();
+        while (iterator.hasNext()) {
+            if (isTeammateCreature(iterator.next())) {
+                iterator.remove();
+            }
+        }
+        return result;
+    }
+
+    private boolean isTeammate(Entity card) {
+        return TeamComponent.mapper.has(card) && TeamComponent.mapper.get(card).id == actionQueue.getCurrentTeamId();
+    }
+
+    private boolean isTeammateCreature(Entity card) {
+        return CreatureComponent.mapper.has(card) && TeamComponent.mapper.has(card) && TeamComponent.mapper.get(card).id == actionQueue.getCurrentTeamId();
+    }
+
 
     private void setSelectable(Entity... entities) {
         setSelectable(Arrays.asList(entities));
@@ -230,5 +263,39 @@ public class GameLogicSystem extends EntitySystem {
         clearSelection();
 
         // TODO: implement later
+    }
+
+    private class ActionQueue {
+
+        private Team[] teams;
+        private int currentTeamIndex = 0;
+        private int currentTeamActions = 0;
+
+        ActionQueue(Team[] teams) {
+            this.teams = teams;
+        }
+
+        Team getCurrentTeam() {
+            return teams[currentTeamIndex];
+        }
+
+        int getCurrentTeamId() {
+            return teams[currentTeamIndex].getId();
+        }
+
+        void nextAction() {
+            currentTeamActions++;
+            if (currentTeamActions >= getCurrentTeam().getSteps()) {
+                nextTeam();
+            }
+        }
+
+        private void nextTeam() {
+            currentTeamIndex++;
+            if (currentTeamIndex >= teams.length) {
+                currentTeamIndex = 0;
+            }
+            currentTeamActions = 0;
+        }
     }
 }

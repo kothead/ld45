@@ -7,16 +7,10 @@ import com.kothead.gdxjam.base.GdxJam;
 import com.kothead.gdxjam.base.GdxJamGame;
 import com.kothead.gdxjam.base.screen.BaseScreen;
 import com.kothead.gdxjam.base.screen.ScreenBuilder;
-import com.kothead.gdxjam.base.util.Direction;
 import com.shoggoth.ld45.EntityManager;
-import com.shoggoth.ld45.component.AllyComponent;
-import com.shoggoth.ld45.component.EnemyComponent;
 import com.shoggoth.ld45.component.SelectableComponent;
-import com.shoggoth.ld45.component.SelectionSourceComponent;
 import com.shoggoth.ld45.util.RenderConfig;
-
-import java.util.Collections;
-import java.util.List;
+import com.shoggoth.ld45.util.Team;
 
 public class GameScreen extends BaseScreen {
 
@@ -43,7 +37,10 @@ public class GameScreen extends BaseScreen {
     }
 
     protected void layout(int width, int height) {
-        manager = new EntityManager(GdxJam.engine(), this, renderConfig);
+        Team players = new Team(1, 2, true);
+        Team enemies = new Team(2, 3, false);
+
+        manager = new EntityManager(GdxJam.engine(), this, renderConfig, players, enemies);
         for (int i = 0; i < renderConfig.getFieldHeight(); i++) {
             for (int j = 0; j < renderConfig.getFieldWidth(); j++) {
                 field[i][j] = manager.addCell(j, i);
@@ -51,14 +48,14 @@ public class GameScreen extends BaseScreen {
         }
 
         getField()[0][0].add(new SelectableComponent());
-        manager.addNothing(0, 1);
-        manager.addAbyss(0, 0);
-        manager.addZombie(1, 2);
+        manager.addNothing(0, 1, players.getId());
+        manager.addAbyss(0, 0, players.getId());
+        manager.addZombie(1, 2, players.getId());
 
-        manager.addCemetery(5, 1);
-        manager.addDemon(5, 2).add(new AllyComponent());
-        manager.addSkeleton(6, 2).add(new EnemyComponent());
-        manager.addSkeleton(4, 2).add(new AllyComponent());
+        manager.addCemetery(5, 1, players.getId());
+        manager.addDemon(5, 2, players.getId());
+        manager.addSkeleton(6, 2, enemies.getId());
+        manager.addSkeleton(4, 2, players.getId());
     }
 
     @Override

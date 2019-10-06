@@ -12,6 +12,7 @@ import com.shoggoth.ld45.screen.GameScreen;
 import com.shoggoth.ld45.system.*;
 import com.shoggoth.ld45.util.CardSprite;
 import com.shoggoth.ld45.util.RenderConfig;
+import com.shoggoth.ld45.util.Team;
 
 import java.util.ArrayList;
 
@@ -20,11 +21,13 @@ public class EntityManager {
     private Engine engine;
     private GameScreen screen;
     private RenderConfig renderConfig;
+    private Team[] teams;
 
-    public EntityManager(Engine engine, GameScreen screen, RenderConfig renderConfig) {
+    public EntityManager(Engine engine, GameScreen screen, RenderConfig renderConfig, Team... teams) {
         this.engine = engine;
         this.screen = screen;
         this.renderConfig = renderConfig;
+        this.teams = teams;
         registerSystems();
     }
 
@@ -36,7 +39,7 @@ public class EntityManager {
         engine.addSystem(new InputSystem(priority++, screen, renderConfig));
         engine.addSystem(new RenderSystem(priority++, screen.batch()));
         engine.addSystem(new FieldHighlightRenderSystem(priority++, screen.shapes(), renderConfig));
-        engine.addSystem(new GameLogicSystem(priority++, screen, this, renderConfig));
+        engine.addSystem(new GameLogicSystem(priority++, screen, this, renderConfig, teams));
     }
 
     public Entity addCell(int x, int y) {
@@ -52,7 +55,7 @@ public class EntityManager {
         return entity;
     }
 
-    private Entity addCard(int x, int y) {
+    private Entity addCard(int x, int y, int teamId) {
         Entity entity = new Entity();
         entity.add(new PositionComponent(
                 (renderConfig.getPadding() + renderConfig.getCardWidth()) * x + renderConfig.getMargin(),
@@ -60,12 +63,13 @@ public class EntityManager {
                 0
         ));
         entity.add(new CardComponent());
+        entity.add(new TeamComponent(teamId));
         attach(screen.getField()[y][x], entity);
         return entity;
     }
 
-    public Entity addSkeleton(int x, int y) {
-        Entity entity = addCard(x, y);
+    public Entity addSkeleton(int x, int y, int teamId) {
+        Entity entity = addCard(x, y, teamId);
         entity.add(new CreatureComponent());
         CardSprite sprite = new CardSprite();
         sprite.setBorder(Assets.images.BORDER);
@@ -84,8 +88,8 @@ public class EntityManager {
         return entity;
     }
 
-    public Entity addZombie(int x, int y) {
-        Entity entity = addCard(x, y);
+    public Entity addZombie(int x, int y, int teamId) {
+        Entity entity = addCard(x, y, teamId);
         entity.add(new CreatureComponent());
         CardSprite sprite = new CardSprite();
         sprite.setBorder(Assets.images.BORDER);
@@ -104,8 +108,8 @@ public class EntityManager {
         return entity;
     }
 
-    public Entity addDemon(int x, int y) {
-        Entity entity = addCard(x, y);
+    public Entity addDemon(int x, int y, int teamId) {
+        Entity entity = addCard(x, y, teamId);
         entity.add(new CreatureComponent());
         CardSprite sprite = new CardSprite();
         sprite.setBorder(Assets.images.BORDER);
@@ -124,14 +128,13 @@ public class EntityManager {
         return entity;
     }
 
-    public Entity addCrypt(int x, int y) {
-        Entity entity = addCard(x, y);
+    public Entity addCrypt(int x, int y, final int teamId) {
+        Entity entity = addCard(x, y, teamId);
         entity.add(new HealthComponent(1));
         entity.add(new SpawnerComponent(new SpawnerComponent.Spawner() {
             @Override
             public Entity spawn(int x, int y) {
-                Entity entity = addSkeleton(x, y);
-                entity.add(new AllyComponent());
+                Entity entity = addSkeleton(x, y, teamId);
                 return entity;
             }
         }, 2, 4));
@@ -150,14 +153,13 @@ public class EntityManager {
         return entity;
     }
 
-    public Entity addCemetery(int x, int y) {
-        Entity entity = addCard(x, y);
+    public Entity addCemetery(int x, int y, final int teamId) {
+        Entity entity = addCard(x, y, teamId);
         entity.add(new HealthComponent(1));
         entity.add(new SpawnerComponent(new SpawnerComponent.Spawner() {
             @Override
             public Entity spawn(int x, int y) {
-                Entity entity = addZombie(x, y);
-                entity.add(new AllyComponent());
+                Entity entity = addZombie(x, y, teamId);
                 return entity;
             }
         }, 1, 2));
@@ -176,14 +178,13 @@ public class EntityManager {
         return entity;
     }
 
-    public Entity addAbyss(int x, int y) {
-        Entity entity = addCard(x, y);
+    public Entity addAbyss(int x, int y, final int teamId) {
+        Entity entity = addCard(x, y, teamId);
         entity.add(new HealthComponent(1));
         entity.add(new SpawnerComponent(new SpawnerComponent.Spawner() {
             @Override
             public Entity spawn(int x, int y) {
-                Entity entity = addSkeleton(x, y);
-                entity.add(new AllyComponent());
+                Entity entity = addSkeleton(x, y, teamId);
                 return entity;
             }
         }, 1, 3));
@@ -202,8 +203,8 @@ public class EntityManager {
         return entity;
     }
 
-    public Entity addNothing(int x, int y) {
-        Entity entity = addCard(x, y);
+    public Entity addNothing(int x, int y, int teamId) {
+        Entity entity = addCard(x, y, teamId);
         CardSprite sprite = new CardSprite();
         sprite.setBorder(Assets.images.BORDER);
         sprite.setBackground(Assets.images.BACKGROUND);

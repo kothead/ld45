@@ -3,10 +3,6 @@ package com.shoggoth.ld45.component;
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
-import com.kothead.gdxjam.base.util.Direction;
-
-import java.util.List;
-import java.util.ArrayList;
 
 public class SpawnerComponent implements Component {
     public static final ComponentMapper<SpawnerComponent> mapper = ComponentMapper.getFor(SpawnerComponent.class);
