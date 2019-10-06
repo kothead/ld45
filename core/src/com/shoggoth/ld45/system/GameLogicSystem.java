@@ -2,7 +2,9 @@ package com.shoggoth.ld45.system;
 
 import com.badlogic.ashley.core.*;
 import com.badlogic.ashley.utils.ImmutableArray;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.math.Vector3;
 import com.kothead.gdxjam.base.component.PositionComponent;
 import com.kothead.gdxjam.base.util.Direction;
 import com.shoggoth.ld45.EntityManager;
@@ -192,7 +194,10 @@ public class GameLogicSystem extends EntitySystem {
         List<Entity> result = without(entities, mappers);
         Iterator<Entity> iterator = result.iterator();
         while (iterator.hasNext()) {
-            if (isTeammateCreature(iterator.next())) {
+            Entity entity = iterator.next();
+            if (!AttachComponent.mapper.has(entity)) continue;
+            Entity card = AttachComponent.mapper.get(entity).entity;
+            if (isTeammateCreature(card)) {
                 iterator.remove();
             }
         }
@@ -242,6 +247,7 @@ public class GameLogicSystem extends EntitySystem {
 
         CellComponent cellComponent = CellComponent.mapper.get(cell);
         manager.attach(cell, card);
+
         card.add(new InterpolationPositionComponent(
                 Interpolation.fastSlow,
                 PositionComponent.mapper.get(card).position,
@@ -255,14 +261,41 @@ public class GameLogicSystem extends EntitySystem {
         clearSelection();
 
         CellComponent cellComponent = CellComponent.mapper.get(cell);
-        SpawnerComponent.mapper.get(card).spawn(cellComponent.getX(), cellComponent.getY());
+        Entity spawned = SpawnerComponent.mapper.get(card).spawn(cellComponent.getX(), cellComponent.getY());
+        InterpolationPositionComponent component = new InterpolationPositionComponent(
+                Interpolation.fastSlow,
+                PositionComponent.mapper.get(card).position,
+                PositionComponent.mapper.get(spawned).position,
+                1.0f
+        );
+        component.from.z = -1.0f;
+        spawned.add(component);
     }
 
     private void attack(Entity source, Entity target) {
         setSelectable();
         clearSelection();
 
-        // TODO: implement later
+        Vector3 origin = new Vector3(PositionComponent.mapper.get(source).position);
+
+        Vector3 aim = new Vector3(PositionComponent.mapper.get(target).position);
+        aim.x += (origin.x - aim.x) / 2;
+        aim.y += (origin.y - aim.y) / 2;
+        aim.z = 1.0f;
+
+        InterpolationPositionComponent component = new InterpolationPositionComponent(
+                Interpolation.slowFast,
+                origin,
+                aim,
+                0.10f
+        );
+        component.next = new InterpolationPositionComponent(
+                Interpolation.fastSlow,
+                aim,
+                origin,
+                0.20f
+        );
+        source.add(component);
     }
 
     private class ActionQueue {

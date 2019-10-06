@@ -3,8 +3,11 @@ package com.shoggoth.ld45.system;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector3;
 import com.kothead.gdxjam.base.component.PositionComponent;
+import com.kothead.gdxjam.base.system.RenderSystem;
+import com.shoggoth.ld45.EntityManager;
 import com.shoggoth.ld45.component.InterpolationPositionComponent;
 
 public class InterpolationPositionSystem extends IteratingSystem {
@@ -19,6 +22,10 @@ public class InterpolationPositionSystem extends IteratingSystem {
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
         InterpolationPositionComponent component = InterpolationPositionComponent.mapper.get(entity);
+        if (component.elapsed == 0.0f) {
+            forceSortZ();
+        }
+
         component.elapsed += deltaTime;
 
         Vector3 position = PositionComponent.mapper.get(entity).position;
@@ -29,10 +36,17 @@ public class InterpolationPositionSystem extends IteratingSystem {
         );
 
         if (component.elapsed >= component.duration) {
+            position.set(component.to);
             entity.remove(InterpolationPositionComponent.class);
+            forceSortZ();
+
             if (component.next != null) {
                 entity.add(component.next);
             }
         }
+    }
+
+    private void forceSortZ() {
+        getEngine().getSystem(RenderSystem.class).forceSort();
     }
 }

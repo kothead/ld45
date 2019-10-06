@@ -37,6 +37,7 @@ public class EntityManager {
         engine.addSystem(new InterpolationOpacitySystem(priority++));
         engine.addSystem(new InterpolationScaleSystem(priority++));
         engine.addSystem(new InputSystem(priority++, screen, renderConfig));
+        engine.addSystem(new BackgroundRenderSystem(priority++, screen, renderConfig));
         engine.addSystem(new RenderSystem(priority++, screen.batch()));
         engine.addSystem(new FieldHighlightRenderSystem(priority++, screen.shapes(), renderConfig));
         engine.addSystem(new GameLogicSystem(priority++, screen, this, renderConfig, teams));
@@ -100,9 +101,9 @@ public class EntityManager {
             add(Assets.images.PRESENCE2);
         }});
         sprite.setBase(Assets.images.ZOMBIE);
-        sprite.setCosmetics(new ArrayList<AssetDescriptor<TextureRegion>>() {{
-            add(Assets.images.COSMETIC);
-        }});
+//        sprite.setCosmetics(new ArrayList<AssetDescriptor<TextureRegion>>() {{
+//            add(Assets.images.COSMETIC);
+//        }});
         entity.add(new SpriteComponent(sprite));
         engine.addEntity(entity);
         return entity;

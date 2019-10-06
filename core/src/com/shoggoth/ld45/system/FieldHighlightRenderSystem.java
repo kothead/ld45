@@ -48,7 +48,7 @@ public class FieldHighlightRenderSystem extends IteratingSystem {
         } else if (SelectableComponent.mapper.has(entity)) {
             shapes.setColor(selectable);
         } else {
-            shapes.setColor(empty);
+            return;
         }
 
         Vector3 position = PositionComponent.mapper.get(entity).position;
