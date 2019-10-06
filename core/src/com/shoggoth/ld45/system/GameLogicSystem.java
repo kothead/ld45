@@ -2,7 +2,10 @@ package com.shoggoth.ld45.system;
 
 import com.badlogic.ashley.core.*;
 import com.badlogic.ashley.utils.ImmutableArray;
+import com.badlogic.gdx.math.Interpolation;
+import com.kothead.gdxjam.base.component.PositionComponent;
 import com.kothead.gdxjam.base.util.Direction;
+import com.shoggoth.ld45.EntityManager;
 import com.shoggoth.ld45.component.*;
 import com.shoggoth.ld45.screen.GameScreen;
 import com.shoggoth.ld45.util.RenderConfig;
@@ -35,11 +38,13 @@ public class GameLogicSystem extends EntitySystem {
     private ImmutableArray<Entity> targets;
 
     private GameScreen screen;
+    private EntityManager manager;
     private RenderConfig config;
 
-    public GameLogicSystem(int priority, GameScreen screen, RenderConfig config) {
+    public GameLogicSystem(int priority, GameScreen screen, EntityManager manager, RenderConfig config) {
         super(priority);
         this.screen = screen;
+        this.manager = manager;
         this.config = config;
     }
 
@@ -184,19 +189,46 @@ public class GameLogicSystem extends EntitySystem {
         }
     }
 
+    public void clearSelection() {
+        for (int i = 0; i < config.getFieldHeight(); i++) {
+            for (int j = 0; j < config.getFieldWidth(); j++) {
+                Entity entity = screen.getField()[i][j];
+                entity.remove(SelectionSourceComponent.class);
+                entity.remove(SelectionTargetComponent.class);
+            }
+        }
+    }
+
     private void showAvailableBuildings() {
         // TODO: show popup with available buildings
     }
 
     private void move(Entity card, Entity cell) {
-        // TODO: implement later
+        setSelectable();
+        clearSelection();
+
+        CellComponent cellComponent = CellComponent.mapper.get(cell);
+        manager.attach(cell, card);
+        card.add(new InterpolationPositionComponent(
+                Interpolation.fastSlow,
+                PositionComponent.mapper.get(card).position,
+                PositionComponent.mapper.get(cell).position,
+                0.3f
+        ));
     }
 
     private void spawn(Entity card, Entity cell) {
-        // TODO: implement later
+        setSelectable();
+        clearSelection();
+
+        CellComponent cellComponent = CellComponent.mapper.get(cell);
+        SpawnerComponent.mapper.get(card).spawn(cellComponent.getX(), cellComponent.getY());
     }
 
     private void attack(Entity source, Entity target) {
+        setSelectable();
+        clearSelection();
+
         // TODO: implement later
     }
 }

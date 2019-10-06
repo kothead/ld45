@@ -166,14 +166,4 @@ public class InputSystem extends EntitySystem implements InputProcessor {
         }
         return false;
     }
-
-    public void clearSelection() {
-        for (int i = 0; i < renderConfig.getFieldHeight(); i++) {
-            for (int j = 0; j < renderConfig.getFieldWidth(); j++) {
-                Entity entity = screen.getField()[i][j];
-                entity.remove(SelectionSourceComponent.class);
-                entity.remove(SelectionTargetComponent.class);
-            }
-        }
-    }
 }

@@ -60,21 +60,21 @@ ground
   orig: 140, 196
   offset: 0, 0
   index: -1
-ground
+ground2
   rotate: false
   xy: 290, 602
   size: 140, 196
   orig: 140, 196
   offset: 0, 0
-  index: 2
-nothing
+  index: -1
+ground3
   rotate: false
   xy: 434, 802
   size: 140, 196
   orig: 140, 196
   offset: 0, 0
   index: -1
-presence
+nothing
   rotate: false
   xy: 2, 2
   size: 140, 196
@@ -87,8 +87,8 @@ presence
   size: 140, 196
   orig: 140, 196
   offset: 0, 0
-  index: 2
-river
+  index: -1
+presence2
   rotate: false
   xy: 290, 402
   size: 140, 196
@@ -101,17 +101,24 @@ river
   size: 140, 196
   orig: 140, 196
   offset: 0, 0
-  index: 2
-skeleton
+  index: -1
+river2
   rotate: false
   xy: 578, 802
   size: 140, 196
   orig: 140, 196
   offset: 0, 0
   index: -1
-zombie
+skeleton
   rotate: false
   xy: 146, 2
+  size: 140, 196
+  orig: 140, 196
+  offset: 0, 0
+  index: -1
+zombie
+  rotate: false
+  xy: 290, 202
   size: 140, 196
   orig: 140, 196
   offset: 0, 0

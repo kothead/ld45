@@ -9,9 +9,7 @@ import com.kothead.gdxjam.base.component.SpriteComponent;
 import com.kothead.gdxjam.base.system.RenderSystem;
 import com.shoggoth.ld45.component.*;
 import com.shoggoth.ld45.screen.GameScreen;
-import com.shoggoth.ld45.system.FieldHighlightRenderSystem;
-import com.shoggoth.ld45.system.GameLogicSystem;
-import com.shoggoth.ld45.system.InputSystem;
+import com.shoggoth.ld45.system.*;
 import com.shoggoth.ld45.util.CardSprite;
 import com.shoggoth.ld45.util.RenderConfig;
 
@@ -32,10 +30,13 @@ public class EntityManager {
 
     public void registerSystems() {
         int priority = 0;
+        engine.addSystem(new InterpolationPositionSystem(priority++));
+        engine.addSystem(new InterpolationOpacitySystem(priority++));
+        engine.addSystem(new InterpolationScaleSystem(priority++));
         engine.addSystem(new InputSystem(priority++, screen, renderConfig));
         engine.addSystem(new RenderSystem(priority++, screen.batch()));
         engine.addSystem(new FieldHighlightRenderSystem(priority++, screen.shapes(), renderConfig));
-        engine.addSystem(new GameLogicSystem(priority++, screen, renderConfig));
+        engine.addSystem(new GameLogicSystem(priority++, screen, this, renderConfig));
     }
 
     public Entity addCell(int x, int y) {
@@ -90,9 +91,9 @@ public class EntityManager {
         sprite.setBorder(Assets.images.BORDER);
         sprite.setBackground(Assets.images.BACKGROUND);
         sprite.setBackgroundCosmetics(new ArrayList<AssetDescriptor<TextureRegion>>() {{
-            add(Assets.images.RIVER_2);
-            add(Assets.images.GROUND_2);
-            add(Assets.images.PRESENCE_2);
+            add(Assets.images.RIVER2);
+            add(Assets.images.GROUND2);
+            add(Assets.images.PRESENCE2);
         }});
         sprite.setBase(Assets.images.ZOMBIE);
         sprite.setCosmetics(new ArrayList<AssetDescriptor<TextureRegion>>() {{
@@ -165,9 +166,9 @@ public class EntityManager {
         sprite.setBorder(Assets.images.BORDER);
         sprite.setBackground(Assets.images.BACKGROUND);
         sprite.setBackgroundCosmetics(new ArrayList<AssetDescriptor<TextureRegion>>() {{
-            add(Assets.images.RIVER);
-            add(Assets.images.GROUND);
-            add(Assets.images.PRESENCE);
+//            add(Assets.images.RIVER);
+            add(Assets.images.GROUND3);
+//            add(Assets.images.PRESENCE);
         }});
         sprite.setBase(Assets.images.CEMETERY);
         entity.add(new SpriteComponent(sprite));
