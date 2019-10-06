@@ -18,6 +18,9 @@ import com.shoggoth.ld45.util.RenderConfig;
 
 public class InputSystem extends EntitySystem implements InputProcessor {
 
+    private static final float CAMERA_SPEED = 400.0f;
+    private static final float MOVEMENT_MARGIN = 20;
+
     private GameScreen screen;
 
     private RenderConfig renderConfig;
@@ -44,29 +47,59 @@ public class InputSystem extends EntitySystem implements InputProcessor {
     public void update(float deltaTime) {
         super.update(deltaTime);
 
+        Camera camera = screen.getCamera();
+        boolean updated = false;
+        float x = camera.position.x;
+        float y = camera.position.y;
+
         if (isDragging) {
-            Camera camera = screen.getCamera();
+            x = camera.position.x - delta.x;
+            y = camera.position.y + delta.y;
+            updated = true;
 
-            float x = -delta.x;
-            float y = delta.y;
+            delta.setZero();
+        } else {
+            int px = Gdx.input.getX();
+            int py = Gdx.input.getY();
 
-            x = screen.getCamera().position.x + x;
-            y = screen.getCamera().position.y + y;
+            if (px <= MOVEMENT_MARGIN
+                    || Gdx.input.isKeyPressed(Input.Keys.A)
+                    || Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+                x -= CAMERA_SPEED * deltaTime;
+                updated = true;
+            } else if (px >= screen.getWorldWidth() - MOVEMENT_MARGIN
+                    || Gdx.input.isKeyPressed(Input.Keys.D)
+                    || Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+                x += CAMERA_SPEED * deltaTime;
+                updated = true;
+            }
 
+            if (py <= MOVEMENT_MARGIN
+                    || Gdx.input.isKeyPressed(Input.Keys.W)
+                    || Gdx.input.isKeyPressed(Input.Keys.UP)) {
+                y += CAMERA_SPEED * deltaTime;
+                updated = true;
+            } else if (py >= screen.getWorldHeight() - MOVEMENT_MARGIN
+                    || Gdx.input.isKeyPressed(Input.Keys.S)
+                    || Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+                y -= CAMERA_SPEED * deltaTime;
+                updated = true;
+            }
+        }
+
+        if (updated) {
             x = Math.max(x, cameraLimits.x + camera.viewportWidth / 2f);
             x = Math.min(x, cameraLimits.x + cameraLimits.width - camera.viewportWidth / 2f);
 
             y = Math.max(y, cameraLimits.y + camera.viewportHeight / 2f);
             y = Math.min(y, cameraLimits.y + cameraLimits.height - camera.viewportHeight / 2f);
 
-            screen.getCamera().position.set(x, y, 0);
-            screen.getCamera().update();
+            camera.position.set(x, y, 0);
+            camera.update();
 
-            delta.setZero();
+            screen.shapes().setProjectionMatrix(screen.getCamera().combined);
+            screen.batch().setProjectionMatrix(screen.getCamera().combined);
         }
-
-        screen.shapes().setProjectionMatrix(screen.getCamera().combined);
-        screen.batch().setProjectionMatrix(screen.getCamera().combined);
     }
 
     @Override
