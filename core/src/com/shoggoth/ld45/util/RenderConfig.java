@@ -6,7 +6,7 @@ public class RenderConfig {
     private int fieldHeight;
     private int cardWidth = 140;
     private int cardHeight = 196;
-    private int padding = 8;
+    private int padding = 24;
     private int margin = 100;
 
     public void setCardWidth(int cardWidth) {

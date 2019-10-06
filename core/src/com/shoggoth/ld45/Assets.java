@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.kothead.gdxjam.base.data.loader.TextureRegionLoader;
 
 public final class Assets {
-  public static final AssetDescriptor[] ALL = {images.ABYSS, images.BACKGROUND, images.BORDER, images.CEMETERY, images.COSMETIC, images.CRYPT, images.DEMON, images.DESKTILE, images.GROUND, images.GROUND2, images.GROUND3, images.NOTHING, images.PRESENCE, images.PRESENCE2, images.RIVER, images.RIVER2, images.SKELETON, images.ZOMBIE};
+  public static final AssetDescriptor[] ALL = {images.ABYSS, images.BACKGROUND, images.BORDER, images.BORDERENEMY, images.CEMETERY, images.COSMETIC, images.CRYPT, images.DEMON, images.DESKTILE, images.GROUND, images.GROUND2, images.GROUND3, images.NOTHING, images.PRESENCE, images.PRESENCE2, images.PRESENCE3, images.RIVER, images.RIVER2, images.RIVER3, images.SKELETON, images.ZOMBIE};
 
   public static final class images {
     public static final AssetDescriptor<TextureRegion> ABYSS = new AssetDescriptor<TextureRegion>("images/pack.atlas#abyss", TextureRegion.class, new TextureRegionLoader.TextureRegionParameter("images/pack.atlas", "abyss"));
@@ -13,6 +13,8 @@ public final class Assets {
     public static final AssetDescriptor<TextureRegion> BACKGROUND = new AssetDescriptor<TextureRegion>("images/pack.atlas#background", TextureRegion.class, new TextureRegionLoader.TextureRegionParameter("images/pack.atlas", "background"));
 
     public static final AssetDescriptor<TextureRegion> BORDER = new AssetDescriptor<TextureRegion>("images/pack.atlas#border", TextureRegion.class, new TextureRegionLoader.TextureRegionParameter("images/pack.atlas", "border"));
+
+    public static final AssetDescriptor<TextureRegion> BORDERENEMY = new AssetDescriptor<TextureRegion>("images/pack.atlas#borderenemy", TextureRegion.class, new TextureRegionLoader.TextureRegionParameter("images/pack.atlas", "borderenemy"));
 
     public static final AssetDescriptor<TextureRegion> CEMETERY = new AssetDescriptor<TextureRegion>("images/pack.atlas#cemetery", TextureRegion.class, new TextureRegionLoader.TextureRegionParameter("images/pack.atlas", "cemetery"));
 
@@ -36,14 +38,18 @@ public final class Assets {
 
     public static final AssetDescriptor<TextureRegion> PRESENCE2 = new AssetDescriptor<TextureRegion>("images/pack.atlas#presence2", TextureRegion.class, new TextureRegionLoader.TextureRegionParameter("images/pack.atlas", "presence2"));
 
+    public static final AssetDescriptor<TextureRegion> PRESENCE3 = new AssetDescriptor<TextureRegion>("images/pack.atlas#presence3", TextureRegion.class, new TextureRegionLoader.TextureRegionParameter("images/pack.atlas", "presence3"));
+
     public static final AssetDescriptor<TextureRegion> RIVER = new AssetDescriptor<TextureRegion>("images/pack.atlas#river", TextureRegion.class, new TextureRegionLoader.TextureRegionParameter("images/pack.atlas", "river"));
 
     public static final AssetDescriptor<TextureRegion> RIVER2 = new AssetDescriptor<TextureRegion>("images/pack.atlas#river2", TextureRegion.class, new TextureRegionLoader.TextureRegionParameter("images/pack.atlas", "river2"));
+
+    public static final AssetDescriptor<TextureRegion> RIVER3 = new AssetDescriptor<TextureRegion>("images/pack.atlas#river3", TextureRegion.class, new TextureRegionLoader.TextureRegionParameter("images/pack.atlas", "river3"));
 
     public static final AssetDescriptor<TextureRegion> SKELETON = new AssetDescriptor<TextureRegion>("images/pack.atlas#skeleton", TextureRegion.class, new TextureRegionLoader.TextureRegionParameter("images/pack.atlas", "skeleton"));
 
     public static final AssetDescriptor<TextureRegion> ZOMBIE = new AssetDescriptor<TextureRegion>("images/pack.atlas#zombie", TextureRegion.class, new TextureRegionLoader.TextureRegionParameter("images/pack.atlas", "zombie"));
 
-    public static final AssetDescriptor[] ALL = {ABYSS, BACKGROUND, BORDER, CEMETERY, COSMETIC, CRYPT, DEMON, DESKTILE, GROUND, GROUND2, GROUND3, NOTHING, PRESENCE, PRESENCE2, RIVER, RIVER2, SKELETON, ZOMBIE};
+    public static final AssetDescriptor[] ALL = {ABYSS, BACKGROUND, BORDER, BORDERENEMY, CEMETERY, COSMETIC, CRYPT, DEMON, DESKTILE, GROUND, GROUND2, GROUND3, NOTHING, PRESENCE, PRESENCE2, PRESENCE3, RIVER, RIVER2, RIVER3, SKELETON, ZOMBIE};
   }
 }

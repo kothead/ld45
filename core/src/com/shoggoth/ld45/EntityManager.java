@@ -70,6 +70,13 @@ public class EntityManager {
         return entity;
     }
 
+    private Entity addCard(int teamId) {
+        Entity entity = new Entity();
+        entity.add(new CardComponent());
+        entity.add(new TeamComponent(teamId));
+        return entity;
+    }
+
     public Entity addSkeleton(int x, int y, int teamId) {
         Entity entity = addCard(x, y, teamId);
         entity.add(new CreatureComponent());
@@ -130,8 +137,19 @@ public class EntityManager {
         return entity;
     }
 
-    public Entity addCrypt(int x, int y, final int teamId) {
+    public Entity addCrypt(int x, int y, int teamId) {
         Entity entity = addCard(x, y, teamId);
+        return addCrypt(entity);
+    }
+
+    public Entity addCrypt(int teamId) {
+        Entity entity = addCard(teamId);
+        return addCrypt(entity);
+    }
+
+    private Entity addCrypt(Entity entity) {
+        final int teamId = TeamComponent.mapper.get(entity).id;
+
         entity.add(new HealthComponent(1));
         entity.add(new SpawnerComponent(new SpawnerComponent.Spawner() {
             @Override
@@ -155,8 +173,19 @@ public class EntityManager {
         return entity;
     }
 
-    public Entity addCemetery(int x, int y, final int teamId) {
+    public Entity addCemetery(int x, int y, int teamId) {
         Entity entity = addCard(x, y, teamId);
+        return addCemetery(entity);
+    }
+
+    public Entity addCemetery(int teamId) {
+        Entity entity = addCard(teamId);
+        return addCemetery(entity);
+    }
+
+    private Entity addCemetery(Entity entity) {
+        final int teamId = TeamComponent.mapper.get(entity).id;
+
         entity.add(new HealthComponent(1));
         entity.add(new SpawnerComponent(new SpawnerComponent.Spawner() {
             @Override
@@ -180,8 +209,19 @@ public class EntityManager {
         return entity;
     }
 
-    public Entity addAbyss(int x, int y, final int teamId) {
+    public Entity addAbyss(int x, int y, int teamId) {
         Entity entity = addCard(x, y, teamId);
+        return addAbyss(entity);
+    }
+
+    public Entity addAbyss(int teamId) {
+        Entity entity = addCard(teamId);
+        return addAbyss(entity);
+    }
+
+    private Entity addAbyss(Entity entity) {
+        final int teamId = TeamComponent.mapper.get(entity).id;
+
         entity.add(new HealthComponent(1));
         entity.add(new SpawnerComponent(new SpawnerComponent.Spawner() {
             @Override
@@ -200,6 +240,66 @@ public class EntityManager {
             add(Assets.images.PRESENCE);
         }});
         sprite.setBase(Assets.images.ABYSS);
+        entity.add(new SpriteComponent(sprite));
+        engine.addEntity(entity);
+        return entity;
+    }
+
+    public Entity addBloodRiver(int x, int y, int teamId) {
+        Entity entity = addCard(x, y, teamId);
+        return addBloodRiver(entity);
+    }
+
+    public Entity addBloodRiver(int teamId) {
+        Entity entity = addCard(teamId);
+        return addBloodRiver(entity);
+    }
+
+    private Entity addBloodRiver(Entity entity) {
+        entity.add(new HealthComponent(1));
+        CardSprite sprite = new CardSprite();
+        sprite.setBorder(Assets.images.BORDER);
+        sprite.setBase(Assets.images.RIVER3);
+        entity.add(new SpriteComponent(sprite));
+        engine.addEntity(entity);
+        return entity;
+    }
+
+    public Entity addCursedGround(int x, int y, int teamId) {
+        Entity entity = addCard(x, y, teamId);
+        return addCursedGround(entity);
+    }
+
+    public Entity addCursedGround(int teamId) {
+        Entity entity = addCard(teamId);
+        return addCursedGround(entity);
+    }
+
+    private Entity addCursedGround(Entity entity) {
+        entity.add(new HealthComponent(1));
+        CardSprite sprite = new CardSprite();
+        sprite.setBorder(Assets.images.BORDER);
+        sprite.setBase(Assets.images.GROUND3);
+        entity.add(new SpriteComponent(sprite));
+        engine.addEntity(entity);
+        return entity;
+    }
+
+    public Entity addDemonicPresence(int x, int y, int teamId) {
+        Entity entity = addCard(x, y, teamId);
+        return addDemonicPresence(entity);
+    }
+
+    public Entity addDemonicPresence(int teamId) {
+        Entity entity = addCard(teamId);
+        return addDemonicPresence(entity);
+    }
+
+    private Entity addDemonicPresence(Entity entity) {
+        entity.add(new HealthComponent(1));
+        CardSprite sprite = new CardSprite();
+        sprite.setBorder(Assets.images.BORDER);
+        sprite.setBase(Assets.images.PRESENCE3);
         entity.add(new SpriteComponent(sprite));
         engine.addEntity(entity);
         return entity;
