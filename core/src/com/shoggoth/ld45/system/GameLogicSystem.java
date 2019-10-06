@@ -2,7 +2,6 @@ package com.shoggoth.ld45.system;
 
 import com.badlogic.ashley.core.*;
 import com.badlogic.ashley.utils.ImmutableArray;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector3;
 import com.kothead.gdxjam.base.component.PositionComponent;
@@ -10,6 +9,7 @@ import com.kothead.gdxjam.base.util.Direction;
 import com.shoggoth.ld45.EntityManager;
 import com.shoggoth.ld45.component.*;
 import com.shoggoth.ld45.screen.GameScreen;
+import com.shoggoth.ld45.util.ActionQueue;
 import com.shoggoth.ld45.util.RenderConfig;
 import com.shoggoth.ld45.util.Team;
 
@@ -49,7 +49,7 @@ public class GameLogicSystem extends EntitySystem {
         this.screen = screen;
         this.manager = manager;
         this.config = config;
-        this.actionQueue = new ActionQueue(teams);
+        this.actionQueue = screen.getActionQueue();
     }
 
     @Override
@@ -298,37 +298,4 @@ public class GameLogicSystem extends EntitySystem {
         source.add(component);
     }
 
-    private class ActionQueue {
-
-        private Team[] teams;
-        private int currentTeamIndex = 0;
-        private int currentTeamActions = 0;
-
-        ActionQueue(Team[] teams) {
-            this.teams = teams;
-        }
-
-        Team getCurrentTeam() {
-            return teams[currentTeamIndex];
-        }
-
-        int getCurrentTeamId() {
-            return teams[currentTeamIndex].getId();
-        }
-
-        void nextAction() {
-            currentTeamActions++;
-            if (currentTeamActions >= getCurrentTeam().getSteps()) {
-                nextTeam();
-            }
-        }
-
-        private void nextTeam() {
-            currentTeamIndex++;
-            if (currentTeamIndex >= teams.length) {
-                currentTeamIndex = 0;
-            }
-            currentTeamActions = 0;
-        }
-    }
 }

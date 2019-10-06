@@ -8,7 +8,8 @@ import com.kothead.gdxjam.base.GdxJamGame;
 import com.kothead.gdxjam.base.screen.BaseScreen;
 import com.kothead.gdxjam.base.screen.ScreenBuilder;
 import com.shoggoth.ld45.EntityManager;
-import com.shoggoth.ld45.component.SelectableComponent;
+import com.shoggoth.ld45.util.AITeam;
+import com.shoggoth.ld45.util.ActionQueue;
 import com.shoggoth.ld45.util.RenderConfig;
 import com.shoggoth.ld45.util.Team;
 
@@ -17,6 +18,7 @@ public class GameScreen extends BaseScreen {
     private EntityManager manager;
     private RenderConfig renderConfig = new RenderConfig();
 
+    private ActionQueue actionQueue;
     private Entity[][] field;
 
     public GameScreen(GdxJamGame game, int fieldWidth, int fieldHeight) {
@@ -38,7 +40,8 @@ public class GameScreen extends BaseScreen {
 
     protected void layout(int width, int height) {
         Team players = new Team(1, 2, true);
-        Team enemies = new Team(2, 3, false);
+        Team enemies = new AITeam(2, 3);
+        actionQueue = new ActionQueue(players, enemies);
 
         manager = new EntityManager(GdxJam.engine(), this, renderConfig, players, enemies);
         for (int i = 0; i < renderConfig.getFieldHeight(); i++) {
@@ -47,14 +50,12 @@ public class GameScreen extends BaseScreen {
             }
         }
 
-        getField()[0][0].add(new SelectableComponent());
         manager.addNothing(0, 1, players.getId());
         manager.addAbyss(0, 0, players.getId());
         manager.addZombie(1, 2, players.getId());
 
         manager.addCemetery(5, 1, players.getId());
         manager.addDemon(5, 2, players.getId());
-        manager.addSkeleton(6, 2, enemies.getId());
         manager.addSkeleton(4, 2, players.getId());
     }
 
@@ -74,6 +75,14 @@ public class GameScreen extends BaseScreen {
 
     public Entity[][] getField() {
         return field;
+    }
+
+    public ActionQueue getActionQueue() {
+        return actionQueue;
+    }
+
+    public EntityManager getEntityManager() {
+        return manager;
     }
 
     public static final class Builder implements ScreenBuilder<GameScreen> {

@@ -36,6 +36,7 @@ public class EntityManager {
         engine.addSystem(new InterpolationPositionSystem(priority++));
         engine.addSystem(new InterpolationOpacitySystem(priority++));
         engine.addSystem(new InterpolationScaleSystem(priority++));
+        engine.addSystem(new AISystem(priority++, screen, renderConfig));
         engine.addSystem(new InputSystem(priority++, screen, renderConfig));
         engine.addSystem(new BackgroundRenderSystem(priority++, screen, renderConfig));
         engine.addSystem(new RenderSystem(priority++, screen.batch()));
