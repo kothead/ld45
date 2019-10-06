@@ -16,13 +16,6 @@ public class SpawnerComponent implements Component {
     public int healthBuff = 0;
     public int damageBuff = 0;
 
-    public List<Direction> directions = new ArrayList<Direction>() {{
-        add(Direction.DOWN);
-        add(Direction.UP);
-        add(Direction.LEFT);
-        add(Direction.RIGHT);
-    }};
-
     private Spawner spawner;
 
     public SpawnerComponent(Spawner spawner, int spawnCount, int limit) {

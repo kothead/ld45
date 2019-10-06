@@ -5,9 +5,15 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.kothead.gdxjam.base.data.loader.TextureRegionLoader;
 
 public final class Assets {
-  public static final AssetDescriptor[] ALL = {images.ABYSS, images.BACKGROUND, images.BORDER, images.CEMETERY, images.COSMETIC, images.CRYPT, images.DEMON, images.GROUND, images.NOTHING, images.PRESENCE, images.RIVER, images.SKELETON, images.ZOMBIE};
+  public static final AssetDescriptor[] ALL = {images.GROUND_2, images.PRESENCE_2, images.RIVER_2, images.ABYSS, images.BACKGROUND, images.BORDER, images.CEMETERY, images.COSMETIC, images.CRYPT, images.DEMON, images.GROUND, images.NOTHING, images.PRESENCE, images.RIVER, images.SKELETON, images.ZOMBIE};
 
   public static final class images {
+    public static final AssetDescriptor<TextureRegion> GROUND_2 = new AssetDescriptor<TextureRegion>("images/pack.atlas#ground", TextureRegion.class, new TextureRegionLoader.TextureRegionParameter("images/pack.atlas", "ground", 2));
+
+    public static final AssetDescriptor<TextureRegion> PRESENCE_2 = new AssetDescriptor<TextureRegion>("images/pack.atlas#presence", TextureRegion.class, new TextureRegionLoader.TextureRegionParameter("images/pack.atlas", "presence", 2));
+
+    public static final AssetDescriptor<TextureRegion> RIVER_2 = new AssetDescriptor<TextureRegion>("images/pack.atlas#river", TextureRegion.class, new TextureRegionLoader.TextureRegionParameter("images/pack.atlas", "river", 2));
+
     public static final AssetDescriptor<TextureRegion> ABYSS = new AssetDescriptor<TextureRegion>("images/pack.atlas#abyss", TextureRegion.class, new TextureRegionLoader.TextureRegionParameter("images/pack.atlas", "abyss"));
 
     public static final AssetDescriptor<TextureRegion> BACKGROUND = new AssetDescriptor<TextureRegion>("images/pack.atlas#background", TextureRegion.class, new TextureRegionLoader.TextureRegionParameter("images/pack.atlas", "background"));
@@ -34,6 +40,6 @@ public final class Assets {
 
     public static final AssetDescriptor<TextureRegion> ZOMBIE = new AssetDescriptor<TextureRegion>("images/pack.atlas#zombie", TextureRegion.class, new TextureRegionLoader.TextureRegionParameter("images/pack.atlas", "zombie"));
 
-    public static final AssetDescriptor[] ALL = {ABYSS, BACKGROUND, BORDER, CEMETERY, COSMETIC, CRYPT, DEMON, GROUND, NOTHING, PRESENCE, RIVER, SKELETON, ZOMBIE};
+    public static final AssetDescriptor[] ALL = {GROUND_2, PRESENCE_2, RIVER_2, ABYSS, BACKGROUND, BORDER, CEMETERY, COSMETIC, CRYPT, DEMON, GROUND, NOTHING, PRESENCE, RIVER, SKELETON, ZOMBIE};
   }
 }

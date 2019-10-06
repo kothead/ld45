@@ -35,7 +35,7 @@ public class EntityManager {
         engine.addSystem(new InputSystem(priority++, screen, renderConfig));
         engine.addSystem(new RenderSystem(priority++, screen.batch()));
         engine.addSystem(new FieldHighlightRenderSystem(priority++, screen.shapes(), renderConfig));
-        engine.addSystem(new GameLogicSystem(priority++, screen));
+        engine.addSystem(new GameLogicSystem(priority++, screen, renderConfig));
     }
 
     public Entity addCell(int x, int y) {
@@ -72,7 +72,7 @@ public class EntityManager {
         sprite.setBackgroundCosmetics(new ArrayList<AssetDescriptor<TextureRegion>>() {{
             add(Assets.images.RIVER);
             add(Assets.images.GROUND);
-            add(Assets.images.PRESENCE);
+//            add(Assets.images.PRESENCE);
         }});
         sprite.setBase(Assets.images.SKELETON);
         sprite.setCosmetics(new ArrayList<AssetDescriptor<TextureRegion>>() {{
@@ -90,9 +90,9 @@ public class EntityManager {
         sprite.setBorder(Assets.images.BORDER);
         sprite.setBackground(Assets.images.BACKGROUND);
         sprite.setBackgroundCosmetics(new ArrayList<AssetDescriptor<TextureRegion>>() {{
-            add(Assets.images.RIVER);
-            add(Assets.images.GROUND);
-            add(Assets.images.PRESENCE);
+            add(Assets.images.RIVER_2);
+            add(Assets.images.GROUND_2);
+            add(Assets.images.PRESENCE_2);
         }});
         sprite.setBase(Assets.images.ZOMBIE);
         sprite.setCosmetics(new ArrayList<AssetDescriptor<TextureRegion>>() {{
@@ -129,7 +129,9 @@ public class EntityManager {
         entity.add(new SpawnerComponent(new SpawnerComponent.Spawner() {
             @Override
             public Entity spawn(int x, int y) {
-                return addSkeleton(x, y);
+                Entity entity = addSkeleton(x, y);
+                entity.add(new AllyComponent());
+                return entity;
             }
         }, 2, 4));
 
@@ -153,7 +155,9 @@ public class EntityManager {
         entity.add(new SpawnerComponent(new SpawnerComponent.Spawner() {
             @Override
             public Entity spawn(int x, int y) {
-                return addZombie(x, y);
+                Entity entity = addZombie(x, y);
+                entity.add(new AllyComponent());
+                return entity;
             }
         }, 1, 2));
 
@@ -177,7 +181,9 @@ public class EntityManager {
         entity.add(new SpawnerComponent(new SpawnerComponent.Spawner() {
             @Override
             public Entity spawn(int x, int y) {
-                return addSkeleton(x, y);
+                Entity entity = addSkeleton(x, y);
+                entity.add(new AllyComponent());
+                return entity;
             }
         }, 1, 3));
 
@@ -202,6 +208,7 @@ public class EntityManager {
         sprite.setBackground(Assets.images.BACKGROUND);
         sprite.setBase(Assets.images.NOTHING);
         entity.add(new SpriteComponent(sprite));
+        entity.add(new NothingComponent());
         engine.addEntity(entity);
         return entity;
     }

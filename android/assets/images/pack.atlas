@@ -1,96 +1,117 @@
 
 pack.png
-size: 1024,512
+size: 1024,1024
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
 abyss
   rotate: false
-  xy: 2, 202
+  xy: 2, 802
   size: 140, 196
   orig: 140, 196
   offset: 0, 0
   index: -1
 background
   rotate: false
-  xy: 2, 2
+  xy: 2, 602
   size: 140, 196
   orig: 140, 196
   offset: 0, 0
   index: -1
 border
   rotate: false
-  xy: 146, 202
+  xy: 146, 802
   size: 140, 196
   orig: 140, 196
   offset: 0, 0
   index: -1
 cemetery
   rotate: false
-  xy: 146, 2
+  xy: 2, 402
   size: 140, 196
   orig: 140, 196
   offset: 0, 0
   index: -1
 cosmetic
   rotate: false
-  xy: 290, 202
+  xy: 146, 602
   size: 140, 196
   orig: 140, 196
   offset: 0, 0
   index: -1
 crypt
   rotate: false
-  xy: 290, 2
+  xy: 290, 802
   size: 140, 196
   orig: 140, 196
   offset: 0, 0
   index: -1
 demon
   rotate: false
-  xy: 434, 202
+  xy: 2, 202
   size: 140, 196
   orig: 140, 196
   offset: 0, 0
   index: -1
 ground
   rotate: false
-  xy: 434, 2
+  xy: 146, 402
   size: 140, 196
   orig: 140, 196
   offset: 0, 0
   index: -1
+ground
+  rotate: false
+  xy: 290, 602
+  size: 140, 196
+  orig: 140, 196
+  offset: 0, 0
+  index: 2
 nothing
   rotate: false
-  xy: 578, 202
+  xy: 434, 802
   size: 140, 196
   orig: 140, 196
   offset: 0, 0
   index: -1
 presence
   rotate: false
-  xy: 578, 2
+  xy: 2, 2
+  size: 140, 196
+  orig: 140, 196
+  offset: 0, 0
+  index: -1
+presence
+  rotate: false
+  xy: 146, 202
+  size: 140, 196
+  orig: 140, 196
+  offset: 0, 0
+  index: 2
+river
+  rotate: false
+  xy: 290, 402
   size: 140, 196
   orig: 140, 196
   offset: 0, 0
   index: -1
 river
   rotate: false
-  xy: 722, 202
+  xy: 434, 602
   size: 140, 196
   orig: 140, 196
   offset: 0, 0
-  index: -1
+  index: 2
 skeleton
   rotate: false
-  xy: 722, 2
+  xy: 578, 802
   size: 140, 196
   orig: 140, 196
   offset: 0, 0
   index: -1
 zombie
   rotate: false
-  xy: 866, 202
+  xy: 146, 2
   size: 140, 196
   orig: 140, 196
   offset: 0, 0

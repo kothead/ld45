@@ -10,7 +10,8 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.shoggoth.ld45.component.SelectableComponent;
-import com.shoggoth.ld45.component.SelectedComponent;
+import com.shoggoth.ld45.component.SelectionSourceComponent;
+import com.shoggoth.ld45.component.SelectionTargetComponent;
 import com.shoggoth.ld45.screen.GameScreen;
 import com.shoggoth.ld45.util.RenderConfig;
 
@@ -89,12 +90,12 @@ public class InputSystem extends EntitySystem implements InputProcessor {
             if (position.x >= 0 && position.y >= 0) {
                 Entity entity = screen.getField()[(int) position.y][(int) position.x];
                 if (entity != null && SelectableComponent.mapper.has(entity)) {
-                    if (SelectedComponent.mapper.has(entity)) {
-                        entity.remove(SelectedComponent.class);
+                    if (SelectionSourceComponent.mapper.has(entity)) {
+                        entity.remove(SelectionSourceComponent.class);
+                    } else if (hasSelectionSource()) {
+                        entity.add(new SelectionTargetComponent());
                     } else {
-                        entity.add(new SelectedComponent(screen.hasSelectionSource()
-                                ? SelectedComponent.SelectionType.TARGET
-                                : SelectedComponent.SelectionType.SOURCE));
+                        entity.add(new SelectionSourceComponent());
                     }
                 }
             }
@@ -154,5 +155,25 @@ public class InputSystem extends EntitySystem implements InputProcessor {
     @Override
     public boolean scrolled(int amount) {
         return false;
+    }
+
+    public boolean hasSelectionSource() {
+        for (int i = 0; i < renderConfig.getFieldHeight(); i++) {
+            for (int j = 0; j < renderConfig.getFieldWidth(); j++) {
+                Entity entity = screen.getField()[i][j];
+                if (SelectionSourceComponent.mapper.has(entity)) return true;
+            }
+        }
+        return false;
+    }
+
+    public void clearSelection() {
+        for (int i = 0; i < renderConfig.getFieldHeight(); i++) {
+            for (int j = 0; j < renderConfig.getFieldWidth(); j++) {
+                Entity entity = screen.getField()[i][j];
+                entity.remove(SelectionSourceComponent.class);
+                entity.remove(SelectionTargetComponent.class);
+            }
+        }
     }
 }

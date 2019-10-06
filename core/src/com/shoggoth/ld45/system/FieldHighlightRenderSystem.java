@@ -9,7 +9,8 @@ import com.badlogic.gdx.math.Vector3;
 import com.kothead.gdxjam.base.component.PositionComponent;
 import com.shoggoth.ld45.component.CellComponent;
 import com.shoggoth.ld45.component.SelectableComponent;
-import com.shoggoth.ld45.component.SelectedComponent;
+import com.shoggoth.ld45.component.SelectionSourceComponent;
+import com.shoggoth.ld45.component.SelectionTargetComponent;
 import com.shoggoth.ld45.util.RenderConfig;
 
 public class FieldHighlightRenderSystem extends IteratingSystem {
@@ -19,7 +20,8 @@ public class FieldHighlightRenderSystem extends IteratingSystem {
 
     private Color empty = new Color(0, 1, 0, 1);
     private Color selectable = new Color(0, 0, 1, 1);
-    private Color selected = new Color(1, 0, 0, 1);
+    private Color source = new Color(1, 0, 0, 1);
+    private Color target = new Color(1, 1, 0, 1);
 
     public FieldHighlightRenderSystem(int priority, ShapeRenderer renderer, RenderConfig renderConfig) {
         super(Family.all(
@@ -39,8 +41,10 @@ public class FieldHighlightRenderSystem extends IteratingSystem {
 
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
-        if (SelectedComponent.mapper.has(entity)) {
-            shapes.setColor(selected);
+        if (SelectionSourceComponent.mapper.has(entity)) {
+            shapes.setColor(source);
+        } else if (SelectionTargetComponent.mapper.has(entity)) {
+            shapes.setColor(target);
         } else if (SelectableComponent.mapper.has(entity)) {
             shapes.setColor(selectable);
         } else {
