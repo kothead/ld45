@@ -8,6 +8,7 @@ import com.kothead.gdxjam.base.GdxJamGame;
 import com.kothead.gdxjam.base.screen.BaseScreen;
 import com.kothead.gdxjam.base.screen.ScreenBuilder;
 import com.shoggoth.ld45.EntityManager;
+import com.shoggoth.ld45.component.SelectedComponent;
 import com.shoggoth.ld45.util.RenderConfig;
 
 public class GameScreen extends BaseScreen {
@@ -61,6 +62,19 @@ public class GameScreen extends BaseScreen {
 
     public Entity[][] getField() {
         return field;
+    }
+
+    public boolean hasSelectionSource() {
+        for (int i = 0; i < renderConfig.getFieldHeight(); i++) {
+            for (int j = 0; j < renderConfig.getFieldWidth(); j++) {
+                Entity entity = getField()[i][j];
+                if (SelectedComponent.mapper.has(entity)
+                    && SelectedComponent.mapper.get(entity).type == SelectedComponent.SelectionType.SOURCE) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     public static final class Builder implements ScreenBuilder<GameScreen> {

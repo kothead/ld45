@@ -92,7 +92,9 @@ public class InputSystem extends EntitySystem implements InputProcessor {
                     if (SelectedComponent.mapper.has(entity)) {
                         entity.remove(SelectedComponent.class);
                     } else {
-                        entity.add(new SelectedComponent());
+                        entity.add(new SelectedComponent(screen.hasSelectionSource()
+                                ? SelectedComponent.SelectionType.TARGET
+                                : SelectedComponent.SelectionType.SOURCE));
                     }
                 }
             }
