@@ -36,7 +36,13 @@ public class GameScreen extends BaseScreen {
 
     protected void layout(int width, int height) {
         manager = new EntityManager(GdxJam.engine(), this, renderConfig);
-        field[0][0] = manager.addCard(0,0);
+        for (int i = 0; i < renderConfig.getFieldHeight(); i++) {
+            for (int j = 0; j < renderConfig.getFieldWidth(); j++) {
+                field[i][j] = manager.addCell(j, i);
+            }
+        }
+
+        manager.attach(field[0][0], manager.addCard(0,0));
     }
 
     @Override

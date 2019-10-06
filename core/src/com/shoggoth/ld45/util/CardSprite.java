@@ -11,9 +11,6 @@ import java.util.List;
 
 public class CardSprite extends Sprite {
 
-    public static final float WIDTH = 140;
-    public static final float HEIGHT = 196;
-
     private Sprite border;
     private Sprite background;
     private List<Sprite> backgroundCosmetics;
