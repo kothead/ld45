@@ -29,7 +29,13 @@ public class LD45 extends GdxJamGame {
 						Assets.images.GROUND,
 						Assets.images.PRESENCE,
 						Assets.images.SKELETON,
-						Assets.images.COSMETIC
+						Assets.images.DEMON,
+						Assets.images.ZOMBIE,
+						Assets.images.COSMETIC,
+						Assets.images.CEMETERY,
+						Assets.images.CRYPT,
+						Assets.images.ABYSS,
+						Assets.images.NOTHING
 				));
 	}
 

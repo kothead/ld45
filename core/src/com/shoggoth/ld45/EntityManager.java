@@ -39,10 +39,6 @@ public class EntityManager {
     }
 
     public Entity addCell(int x, int y) {
-        if (x < 0 || y < 0 || x >= renderConfig.getFieldWidth() || y >= renderConfig.getFieldHeight()) {
-            return null;
-        }
-
         Entity entity = new Entity();
         entity.add(new CellComponent(x, y));
         entity.add(new PositionComponent(
@@ -55,36 +51,156 @@ public class EntityManager {
         return entity;
     }
 
-    public Entity addCard(int x, int y) {
-        if (x < 0 || y < 0 || x >= renderConfig.getFieldWidth() || y >= renderConfig.getFieldHeight()) {
-            return null;
-        }
-
+    private Entity addCard(int x, int y) {
         Entity entity = new Entity();
-        entity.add(new CardComponent());
-        entity.add(new SpawnerComponent(new SpawnerComponent.Spawner() {
-            @Override
-            public Entity spawn(int x, int y) {
-                return null;
-            }
-        }, 2));
         entity.add(new PositionComponent(
                 (renderConfig.getPadding() + renderConfig.getCardWidth()) * x + renderConfig.getMargin(),
                 (renderConfig.getPadding() + renderConfig.getCardHeight()) * y + renderConfig.getMargin(),
                 0
         ));
+        entity.add(new CardComponent());
+        attach(screen.getField()[y][x], entity);
+        return entity;
+    }
+
+    public Entity addSkeleton(int x, int y) {
+        Entity entity = addCard(x, y);
+        entity.add(new CreatureComponent());
         CardSprite sprite = new CardSprite();
         sprite.setBorder(Assets.images.BORDER);
         sprite.setBackground(Assets.images.BACKGROUND);
-        sprite.setBase(Assets.images.SKELETON);
         sprite.setBackgroundCosmetics(new ArrayList<AssetDescriptor<TextureRegion>>() {{
-                add(Assets.images.RIVER);
-                add(Assets.images.GROUND);
-                add(Assets.images.PRESENCE);
-            }});
+            add(Assets.images.RIVER);
+            add(Assets.images.GROUND);
+            add(Assets.images.PRESENCE);
+        }});
+        sprite.setBase(Assets.images.SKELETON);
         sprite.setCosmetics(new ArrayList<AssetDescriptor<TextureRegion>>() {{
                 add(Assets.images.COSMETIC);
             }});
+        entity.add(new SpriteComponent(sprite));
+        engine.addEntity(entity);
+        return entity;
+    }
+
+    public Entity addZombie(int x, int y) {
+        Entity entity = addCard(x, y);
+        entity.add(new CreatureComponent());
+        CardSprite sprite = new CardSprite();
+        sprite.setBorder(Assets.images.BORDER);
+        sprite.setBackground(Assets.images.BACKGROUND);
+        sprite.setBackgroundCosmetics(new ArrayList<AssetDescriptor<TextureRegion>>() {{
+            add(Assets.images.RIVER);
+            add(Assets.images.GROUND);
+            add(Assets.images.PRESENCE);
+        }});
+        sprite.setBase(Assets.images.ZOMBIE);
+        sprite.setCosmetics(new ArrayList<AssetDescriptor<TextureRegion>>() {{
+            add(Assets.images.COSMETIC);
+        }});
+        entity.add(new SpriteComponent(sprite));
+        engine.addEntity(entity);
+        return entity;
+    }
+
+    public Entity addDemon(int x, int y) {
+        Entity entity = addCard(x, y);
+        entity.add(new CreatureComponent());
+        CardSprite sprite = new CardSprite();
+        sprite.setBorder(Assets.images.BORDER);
+        sprite.setBackground(Assets.images.BACKGROUND);
+        sprite.setBackgroundCosmetics(new ArrayList<AssetDescriptor<TextureRegion>>() {{
+            add(Assets.images.RIVER);
+            add(Assets.images.GROUND);
+            add(Assets.images.PRESENCE);
+        }});
+        sprite.setBase(Assets.images.DEMON);
+        sprite.setCosmetics(new ArrayList<AssetDescriptor<TextureRegion>>() {{
+            add(Assets.images.COSMETIC);
+        }});
+        entity.add(new SpriteComponent(sprite));
+        engine.addEntity(entity);
+        return entity;
+    }
+
+    public Entity addCrypt(int x, int y) {
+        Entity entity = addCard(x, y);
+        entity.add(new HealthComponent(1));
+        entity.add(new SpawnerComponent(new SpawnerComponent.Spawner() {
+            @Override
+            public Entity spawn(int x, int y) {
+                return addSkeleton(x, y);
+            }
+        }, 2, 4));
+
+        CardSprite sprite = new CardSprite();
+        sprite.setBorder(Assets.images.BORDER);
+        sprite.setBackground(Assets.images.BACKGROUND);
+        sprite.setBackgroundCosmetics(new ArrayList<AssetDescriptor<TextureRegion>>() {{
+            add(Assets.images.RIVER);
+            add(Assets.images.GROUND);
+            add(Assets.images.PRESENCE);
+        }});
+        sprite.setBase(Assets.images.CRYPT);
+        entity.add(new SpriteComponent(sprite));
+        engine.addEntity(entity);
+        return entity;
+    }
+
+    public Entity addCemetery(int x, int y) {
+        Entity entity = addCard(x, y);
+        entity.add(new HealthComponent(1));
+        entity.add(new SpawnerComponent(new SpawnerComponent.Spawner() {
+            @Override
+            public Entity spawn(int x, int y) {
+                return addZombie(x, y);
+            }
+        }, 1, 2));
+
+        CardSprite sprite = new CardSprite();
+        sprite.setBorder(Assets.images.BORDER);
+        sprite.setBackground(Assets.images.BACKGROUND);
+        sprite.setBackgroundCosmetics(new ArrayList<AssetDescriptor<TextureRegion>>() {{
+            add(Assets.images.RIVER);
+            add(Assets.images.GROUND);
+            add(Assets.images.PRESENCE);
+        }});
+        sprite.setBase(Assets.images.CEMETERY);
+        entity.add(new SpriteComponent(sprite));
+        engine.addEntity(entity);
+        return entity;
+    }
+
+    public Entity addAbyss(int x, int y) {
+        Entity entity = addCard(x, y);
+        entity.add(new HealthComponent(1));
+        entity.add(new SpawnerComponent(new SpawnerComponent.Spawner() {
+            @Override
+            public Entity spawn(int x, int y) {
+                return addSkeleton(x, y);
+            }
+        }, 1, 3));
+
+        CardSprite sprite = new CardSprite();
+        sprite.setBorder(Assets.images.BORDER);
+        sprite.setBackground(Assets.images.BACKGROUND);
+        sprite.setBackgroundCosmetics(new ArrayList<AssetDescriptor<TextureRegion>>() {{
+            add(Assets.images.RIVER);
+            add(Assets.images.GROUND);
+            add(Assets.images.PRESENCE);
+        }});
+        sprite.setBase(Assets.images.ABYSS);
+        entity.add(new SpriteComponent(sprite));
+        engine.addEntity(entity);
+        return entity;
+    }
+
+    public Entity addNothing(int x, int y) {
+        Entity entity = addCard(x, y);
+        CardSprite sprite = new CardSprite();
+        sprite.setBorder(Assets.images.BORDER);
+        sprite.setBackground(Assets.images.BACKGROUND);
+        sprite.setBase(Assets.images.NOTHING);
         entity.add(new SpriteComponent(sprite));
         engine.addEntity(entity);
         return entity;

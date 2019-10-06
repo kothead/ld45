@@ -48,8 +48,10 @@ public class GameScreen extends BaseScreen {
             }
         }
 
-        manager.attach(field[0][0], manager.addCard(0,0));
-        field[0][0].add(new SelectableComponent());
+        getField()[0][0].add(new SelectableComponent());
+        manager.addNothing(0, 1);
+        manager.addAbyss(0, 0);
+        manager.addSkeleton(1, 2);
     }
 
     @Override

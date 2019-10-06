@@ -12,6 +12,7 @@ public class SpawnerComponent implements Component {
     public static final ComponentMapper<SpawnerComponent> mapper = ComponentMapper.getFor(SpawnerComponent.class);
 
     public int spawnCount;
+    public int limit;
     public int healthBuff = 0;
     public int damageBuff = 0;
 
@@ -24,9 +25,10 @@ public class SpawnerComponent implements Component {
 
     private Spawner spawner;
 
-    public SpawnerComponent(Spawner spawner, int spawnCount) {
+    public SpawnerComponent(Spawner spawner, int spawnCount, int limit) {
         this.spawner = spawner;
         this.spawnCount = spawnCount;
+        this.limit = limit;
     }
 
     public Entity spawn(int x, int y) {
