@@ -21,6 +21,7 @@ public class ActionQueue {
     }
 
     public void nextAction() {
+        Gdx.app.log("Test", "Action " + currentTeamActions + " of team " + currentTeamIndex + " is completed");
         currentTeamActions++;
         if (currentTeamActions >= getCurrentTeam().getSteps()) {
             nextTeam();

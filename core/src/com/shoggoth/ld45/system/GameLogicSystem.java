@@ -2,7 +2,6 @@ package com.shoggoth.ld45.system;
 
 import com.badlogic.ashley.core.*;
 import com.badlogic.ashley.utils.ImmutableArray;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector3;
 import com.kothead.gdxjam.base.component.PositionComponent;
@@ -122,9 +121,7 @@ public class GameLogicSystem extends EntitySystem {
                     if (setSelectable(combine(
                             // TODO: process REAPING and SAINT prefix
                             withoutTeammates(
-                                    adjacent(source, ACTION_DIRECTIONS),
-                                    SpawnerComponent.mapper,
-                                    ResourceComponent.mapper
+                                    adjacent(source, ACTION_DIRECTIONS)
                             ),
                             Arrays.asList(source)
                     )).size() == 1 && pendingAction) {
@@ -218,7 +215,7 @@ public class GameLogicSystem extends EntitySystem {
             Entity entity = iterator.next();
             if (!AttachComponent.mapper.has(entity)) continue;
             Entity card = AttachComponent.mapper.get(entity).entity;
-            if (isTeammateCreature(card)) {
+            if (isTeammate(card) && !NothingComponent.mapper.has(card)) {
                 iterator.remove();
             }
         }

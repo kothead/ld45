@@ -34,6 +34,8 @@ public class EntityManager {
     private RenderConfig renderConfig;
     private Team[] teams;
 
+    private int cardsCounter = 0;
+
     public EntityManager(Engine engine, GameScreen screen, RenderConfig renderConfig, Team... teams) {
         this.engine = engine;
         this.screen = screen;
@@ -96,7 +98,7 @@ public class EntityManager {
                 0
         ));
         entity.add(new CardComponent());
-        entity.add(new TeamComponent(teamId));
+        entity.add(new TeamComponent(teamId, cardsCounter++));
 
         CardSprite sprite = new CardSprite(renderConfig);
         if (teamId == 1) {
@@ -114,7 +116,7 @@ public class EntityManager {
     private Entity addCard(int teamId) {
         Entity entity = new Entity();
         entity.add(new CardComponent());
-        entity.add(new TeamComponent(teamId));
+        entity.add(new TeamComponent(teamId, cardsCounter++));
         entity.add(new PositionComponent(0, 0, 0));
 
         CardSprite sprite = new CardSprite(renderConfig);
