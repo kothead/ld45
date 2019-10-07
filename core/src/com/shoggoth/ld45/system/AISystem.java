@@ -30,7 +30,7 @@ public class AISystem extends SortedIteratingSystem {
     private List<Entity> unitQueue = new ArrayList<>();
 
     private Queue<Wave> waves = new ArrayDeque<Wave>() {{
-        add(new Wave(2, new SpawnerComponent.Spawner() {
+        add(new Wave(3, new SpawnerComponent.Spawner() {
             @Override
             public Entity spawn(int x, int y) {
                 return spawn(x, y, 2);
@@ -42,7 +42,7 @@ public class AISystem extends SortedIteratingSystem {
                 return entity;
             }
         }));
-        add(new Wave(3, new SpawnerComponent.Spawner() {
+        add(new Wave(4, new SpawnerComponent.Spawner() {
             @Override
             public Entity spawn(int x, int y) {
                 return spawn(x, y, 2);
@@ -62,7 +62,106 @@ public class AISystem extends SortedIteratingSystem {
 
             @Override
             public Entity spawn(int x, int y, int teamId) {
+                Entity entity = screen.getEntityManager().addZombie(x, y, teamId);
+                HealthComponent.mapper.get(entity).health = 15;
+                return entity;
+            }
+        }, new SpawnerComponent.Spawner() {
+            @Override
+            public Entity spawn(int x, int y) {
+                return spawn(x, y, 2);
+            }
+
+            @Override
+            public Entity spawn(int x, int y, int teamId) {
+                Entity entity = screen.getEntityManager().addSkeleton(x, y, teamId);
+                HealthComponent.mapper.get(entity).health = 10;
+                return entity;
+            }
+        }));
+        add(new Wave(5, new SpawnerComponent.Spawner() {
+            @Override
+            public Entity spawn(int x, int y) {
+                return spawn(x, y, 2);
+            }
+
+            @Override
+            public Entity spawn(int x, int y, int teamId) {
                 Entity entity = screen.getEntityManager().addDemon(x, y, teamId);
+                return entity;
+            }
+        }));
+        add(new Wave(6, new SpawnerComponent.Spawner() {
+            @Override
+            public Entity spawn(int x, int y) {
+                return spawn(x, y, 2);
+            }
+
+            @Override
+            public Entity spawn(int x, int y, int teamId) {
+                Entity entity = screen.getEntityManager().addZombie(x, y, teamId);
+                HealthComponent.mapper.get(entity).health = 20;
+                return entity;
+            }
+        }, new SpawnerComponent.Spawner() {
+            @Override
+            public Entity spawn(int x, int y) {
+                return spawn(x, y, 2);
+            }
+
+            @Override
+            public Entity spawn(int x, int y, int teamId) {
+                Entity entity = screen.getEntityManager().addSkeleton(x, y, teamId);
+                HealthComponent.mapper.get(entity).health = 15;
+                return entity;
+            }
+        }, new SpawnerComponent.Spawner() {
+            @Override
+            public Entity spawn(int x, int y) {
+                return spawn(x, y, 2);
+            }
+
+            @Override
+            public Entity spawn(int x, int y, int teamId) {
+                Entity entity = screen.getEntityManager().addDemon(x, y, teamId);
+                HealthComponent.mapper.get(entity).health = 12;
+                return entity;
+            }
+        }));
+        add(new Wave(10, new SpawnerComponent.Spawner() {
+            @Override
+            public Entity spawn(int x, int y) {
+                return spawn(x, y, 2);
+            }
+
+            @Override
+            public Entity spawn(int x, int y, int teamId) {
+                Entity entity = screen.getEntityManager().addZombie(x, y, teamId);
+                HealthComponent.mapper.get(entity).health = 25;
+                return entity;
+            }
+        }, new SpawnerComponent.Spawner() {
+            @Override
+            public Entity spawn(int x, int y) {
+                return spawn(x, y, 2);
+            }
+
+            @Override
+            public Entity spawn(int x, int y, int teamId) {
+                Entity entity = screen.getEntityManager().addSkeleton(x, y, teamId);
+                HealthComponent.mapper.get(entity).health = 20;
+                return entity;
+            }
+        }, new SpawnerComponent.Spawner() {
+            @Override
+            public Entity spawn(int x, int y) {
+                return spawn(x, y, 2);
+            }
+
+            @Override
+            public Entity spawn(int x, int y, int teamId) {
+                Entity entity = screen.getEntityManager().addDemon(x, y, teamId);
+                HealthComponent.mapper.get(entity).health = 15;
                 return entity;
             }
         }));
@@ -76,6 +175,10 @@ public class AISystem extends SortedIteratingSystem {
         this.screen = screen;
         this.config = renderConfig;
         this.actionQueue = screen.getActionQueue();
+    }
+
+    public boolean areEnemiesFinished() {
+        return unitQueue.size() == 0 && waves.isEmpty();
     }
 
     private static class ZComparator implements Comparator<Entity> {
