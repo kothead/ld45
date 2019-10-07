@@ -20,7 +20,7 @@ import com.shoggoth.ld45.util.RenderConfig;
 public class InputSystem extends EntitySystem implements InputProcessor {
 
     private static final float CAMERA_SPEED = 400.0f;
-    private static final float MOVEMENT_MARGIN = -20;
+    private static final float MOVEMENT_MARGIN = 20;
 
     private GameScreen screen;
 
