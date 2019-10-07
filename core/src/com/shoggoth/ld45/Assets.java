@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.kothead.gdxjam.base.data.loader.TextureRegionLoader;
 
 public final class Assets {
-  public static final AssetDescriptor[] ALL = {images.ABYSS, images.BACKGROUND, images.BLOODRIVER, images.BORDER, images.BORDERENEMY, images.CEMETERY, images.CRYPT, images.CURSEDGROUND, images.DAMAGED1, images.DAMAGED2, images.DEMON, images.DEMONIC, images.DEVILFURIOUS, images.DEVILHOLY, images.DEVILMIGHTY, images.DEVILOVERLOAD, images.DEVILREAPING, images.DEVILSLASH, images.DEVILTERRY, images.DEVILTHORNY, images.DEVILVAMP, images.GROUND, images.GROUND2, images.GROUND3, images.NOTHING, images.PRESENCE, images.PRESENCE2, images.PRESENCE3, images.RIVER, images.RIVER2, images.RIVER3, images.SELECTOR, images.SKELETON, images.SKELETONFURIOUS, images.SKELETONHOLY, images.DESKTILE, images.SKELETONMIGHTY, images.SKELETONOVERLOAD, images.SKELETONREAPING, images.SKELETONSLASH, images.SKELETONTERRY, images.SKELETONTHORNY, images.SKELETONVAMP, images.ZAMBFURIOUS, images.ZAMBHOLY, images.ZAMBMIGHTY, images.ZAMBOVERLOAD, images.ZAMBREAPING, images.ZAMBSLASH, images.ZAMBTERRY, images.ZAMBTHORNY, images.ZAMBVAMP, images.ZOMBIE, sounds.CARD, sounds.TAP};
+  public static final AssetDescriptor[] ALL = {images.ABYSS, images.BACKGROUND, images.BLOODRIVER, images.BORDER, images.BORDERENEMY, images.CEMETERY, images.CRYPT, images.CURSEDGROUND, images.DAMAGED1, images.DAMAGED2, images.DEMON, images.DEMONIC, images.DEVILFURIOUS, images.DEVILHOLY, images.DEVILMIGHTY, images.DEVILOVERLOAD, images.DEVILREAPING, images.DEVILSLASH, images.DEVILTERRY, images.DEVILTHORNY, images.DEVILVAMP, images.GROUND, images.GROUND2, images.GROUND3, images.NOTHING, images.PRESENCE, images.PRESENCE2, images.PRESENCE3, images.RIVER, images.RIVER2, images.RIVER3, images.SELECTOR, images.SKELETON, images.SKELETONFURIOUS, images.SKELETONHOLY, images.DESKTILE, images.SKELETONMIGHTY, images.SKELETONOVERLOAD, images.SKELETONREAPING, images.SKELETONSLASH, images.SKELETONTERRY, images.SKELETONTHORNY, images.SKELETONVAMP, images.ZAMBFURIOUS, images.ZAMBHOLY, images.ZAMBMIGHTY, images.ZAMBOVERLOAD, images.ZAMBREAPING, images.ZAMBSLASH, images.ZAMBTERRY, images.ZAMBTHORNY, images.ZAMBVAMP, images.ZOMBIE, sounds.DAMAGE, sounds.DEATH, sounds.HIT, sounds.MOVE, sounds.SPAWN, sounds.TAP};
 
   public static final class images {
     public static final AssetDescriptor<TextureRegion> ABYSS = new AssetDescriptor<TextureRegion>("images\\pack.atlas#abyss", TextureRegion.class, new TextureRegionLoader.TextureRegionParameter("images/pack.atlas", "abyss"));
@@ -119,10 +119,18 @@ public final class Assets {
   }
 
   public static final class sounds {
-    public static final AssetDescriptor<Sound> CARD = new AssetDescriptor<Sound>("sounds\\card.wav", Sound.class);
+    public static final AssetDescriptor<Sound> DAMAGE = new AssetDescriptor<Sound>("sounds\\damage.wav", Sound.class);
+
+    public static final AssetDescriptor<Sound> DEATH = new AssetDescriptor<Sound>("sounds\\death.wav", Sound.class);
+
+    public static final AssetDescriptor<Sound> HIT = new AssetDescriptor<Sound>("sounds\\hit.wav", Sound.class);
+
+    public static final AssetDescriptor<Sound> MOVE = new AssetDescriptor<Sound>("sounds\\move.wav", Sound.class);
+
+    public static final AssetDescriptor<Sound> SPAWN = new AssetDescriptor<Sound>("sounds\\spawn.wav", Sound.class);
 
     public static final AssetDescriptor<Sound> TAP = new AssetDescriptor<Sound>("sounds\\tap.wav", Sound.class);
 
-    public static final AssetDescriptor[] ALL = {CARD, TAP};
+    public static final AssetDescriptor[] ALL = {DAMAGE, DEATH, HIT, MOVE, SPAWN, TAP};
   }
 }

@@ -4,7 +4,9 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector3;
+import com.kothead.gdxjam.base.GdxJam;
 import com.kothead.gdxjam.base.component.PositionComponent;
+import com.shoggoth.ld45.Assets;
 import com.shoggoth.ld45.EntityManager;
 import com.shoggoth.ld45.component.*;
 import com.shoggoth.ld45.screen.GameScreen;
@@ -177,6 +179,7 @@ public class CardSelector {
                 interpolationPosition.callback = new InterpolationPositionComponent.InterpolationCallback() {
                     @Override
                     public void onInterpolationFinished(Entity entity) {
+                        GdxJam.assets().get(Assets.sounds.SPAWN).play();
                         manager.removeEntity(oldNothing);
                         screen.getActionQueue().nextAction();
                     }

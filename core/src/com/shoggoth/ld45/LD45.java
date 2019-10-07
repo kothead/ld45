@@ -82,8 +82,12 @@ public class LD45 extends GdxJamGame {
 						Assets.images.SKELETONTHORNY,
 						Assets.images.SKELETONVAMP,
 
-						Assets.sounds.CARD,
-						Assets.sounds.TAP
+						Assets.sounds.MOVE,
+						Assets.sounds.TAP,
+						Assets.sounds.DAMAGE,
+						Assets.sounds.HIT,
+						Assets.sounds.SPAWN,
+						Assets.sounds.DEATH
 				));
 	}
 

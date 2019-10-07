@@ -296,7 +296,6 @@ public class GameLogicSystem extends EntitySystem {
     }
 
     private void move(final Entity card, final Entity cell) {
-        GdxJam.assets().get(Assets.sounds.CARD).play();
         manager.pause(FieldHighlightRenderSystem.class);
         manager.pause(AISystem.class);
         setSelectable();
@@ -318,6 +317,7 @@ public class GameLogicSystem extends EntitySystem {
         interpolationPosition.callback = new InterpolationPositionComponent.InterpolationCallback() {
             @Override
             public void onInterpolationFinished(Entity entity) {
+                GdxJam.assets().get(Assets.sounds.MOVE).play();
                 if (oldNothing != null) getEngine().removeEntity(oldNothing);
                 manager.resume(FieldHighlightRenderSystem.class);
                 manager.resume(AISystem.class);
@@ -338,6 +338,7 @@ public class GameLogicSystem extends EntitySystem {
     }
 
     private void spawn(Entity card, Entity cell) {
+        GdxJam.assets().get(Assets.sounds.SPAWN).play();
         manager.pause(FieldHighlightRenderSystem.class);
         manager.pause(AISystem.class);
         setSelectable();
@@ -403,6 +404,13 @@ public class GameLogicSystem extends EntitySystem {
                 0,
                 0.20f
         );
+        component.callback = new InterpolationPositionComponent.InterpolationCallback() {
+            @Override
+            public void onInterpolationFinished(Entity entity) {
+                GdxJam.assets().get(Assets.sounds.HIT).play();
+                GdxJam.assets().get(Assets.sounds.DAMAGE).play();
+            }
+        };
         component.next.callback = new InterpolationPositionComponent.InterpolationCallback() {
             @Override
             public void onInterpolationFinished(Entity entity) {
@@ -410,6 +418,7 @@ public class GameLogicSystem extends EntitySystem {
                 component.health -= DamageComponent.mapper.get(source).damage;
                 if (component.health <= 0) {
                     manager.removeEntity(target);
+                    GdxJam.assets().get(Assets.sounds.DEATH).play();
                 }
                 manager.resume(FieldHighlightRenderSystem.class);
                 manager.resume(AISystem.class);
