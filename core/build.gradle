@@ -38,7 +38,7 @@ gatherAssets {
                     setFileName "$atlasName#$region.name"
                     setAssetType com.badlogic.gdx.graphics.g2d.TextureRegion
                     setParamType com.kothead.gdxjam.base.data.loader.TextureRegionLoader.TextureRegionParameter
-                    setParams "\"$atlasName\", \"$region.name\"${region.index != -1 ? ', ' + region.index : ''}"
+                    setParams "\"$atlasName\", \"$region.name\"${region.index != -1 ? ', ' + region.index : ''}".replaceAll("\\\\", "/")
                 }
             }
 

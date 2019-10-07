@@ -29,6 +29,8 @@ public class EntityManager {
             Direction.RIGHT
     };
 
+    public static Direction[] BUFF_DIRECTIONS = Direction.getDirections();
+
     private Engine engine;
     private GameScreen screen;
     private RenderConfig renderConfig;
@@ -58,12 +60,16 @@ public class EntityManager {
 
         engine.addSystem(new BackgroundRenderSystem(priority++, screen, renderConfig));
         engine.addSystem(new RenderSystem(priority++, screen.batch()));
-        engine.addSystem(new FieldHighlightRenderSystem(priority++, screen.shapes(), renderConfig));
+        engine.addSystem(new FieldHighlightRenderSystem(priority++, screen, renderConfig));
         engine.addSystem(new GameLogicSystem(priority++, screen, this, renderConfig, teams));
     }
 
     public <T extends EntitySystem> void pause(Class<T> systemType) {
-        engine.getSystem(systemType).setProcessing(false);
+        if (systemType == FieldHighlightRenderSystem.class) {
+            engine.getSystem(FieldHighlightRenderSystem.class).stopSlowly();
+        } else {
+            engine.getSystem(systemType).setProcessing(false);
+        }
     }
 
     public <T extends EntitySystem> void resume(Class<T> systemType) {
@@ -71,10 +77,7 @@ public class EntityManager {
     }
 
     public void removeEntity(Entity entity) {
-        if (AttachComponent.mapper.has(entity)) {
-            Entity cell = AttachComponent.mapper.get(entity).entity;
-            cell.remove(AttachComponent.class);
-        }
+        detach(entity);
         engine.removeEntity(entity);
     }
 
@@ -299,9 +302,9 @@ public class EntityManager {
 
     private Entity addBloodRiver(Entity entity) {
         entity.add(new HealthComponent(1));
-        entity.add(new ResourceComponent());
+        entity.add(new ResourceComponent(ResourceComponent.ResourceType.RIVER));
         CardSprite sprite = (CardSprite) SpriteComponent.mapper.get(entity).sprite;
-        sprite.setBase(Assets.images.RIVER3);
+        sprite.setBase(Assets.images.BLOODRIVER);
         engine.addEntity(entity);
         return entity;
     }
@@ -318,9 +321,9 @@ public class EntityManager {
 
     private Entity addCursedGround(Entity entity) {
         entity.add(new HealthComponent(1));
-        entity.add(new ResourceComponent());
+        entity.add(new ResourceComponent(ResourceComponent.ResourceType.GROUND));
         CardSprite sprite = (CardSprite) SpriteComponent.mapper.get(entity).sprite;
-        sprite.setBase(Assets.images.GROUND3);
+        sprite.setBase(Assets.images.CURSEDGROUND);
         engine.addEntity(entity);
         return entity;
     }
@@ -337,7 +340,7 @@ public class EntityManager {
 
     private Entity addDemonicPresence(Entity entity) {
         entity.add(new HealthComponent(1));
-        entity.add(new ResourceComponent());
+        entity.add(new ResourceComponent(ResourceComponent.ResourceType.PRESENCE));
         CardSprite sprite = (CardSprite) SpriteComponent.mapper.get(entity).sprite;
         sprite.setBase(Assets.images.PRESENCE3);
         engine.addEntity(entity);
@@ -378,6 +381,50 @@ public class EntityManager {
 
         cell.add(new AttachComponent(card));
         card.add(new AttachComponent(cell));
+
+        buffAround(cell, card, 1);
+    }
+
+    public void detach(Entity card) {
+        if (AttachComponent.mapper.has(card)) {
+            Entity cell = AttachComponent.mapper.get(card).entity;
+            buffAround(cell, card, -1);
+
+            cell.remove(AttachComponent.class);
+            card.remove(AttachComponent.class);
+        }
+    }
+
+    public void buffAround(Entity cell, Entity card, int delta) {
+        if (ResourceComponent.mapper.has(card)) {
+            Entity[][] cells = screen.getField();
+            for (Direction direction: BUFF_DIRECTIONS) {
+                int x = CellComponent.mapper.get(cell).getX() + direction.getDx();
+                int y = CellComponent.mapper.get(cell).getY() + direction.getDy();
+
+                if (x >= 0 && x < renderConfig.getFieldWidth()
+                        && y >= 0 && y < renderConfig.getFieldHeight()
+                        && AttachComponent.mapper.has(cells[y][x])) {
+                    Entity adjacentCard = AttachComponent.mapper.get(cells[y][x]).entity;
+                    SpawnerComponent spawner = SpawnerComponent.mapper.get(adjacentCard);
+                    if (spawner == null) continue;
+
+                    switch (ResourceComponent.mapper.get(card).resourceType) {
+                        case RIVER:
+                            spawner.healthBuff += delta;
+                            break;
+
+                        case GROUND:
+                            spawner.spawnCount += delta;
+                            break;
+
+                        case PRESENCE:
+                            spawner.damageBuff += delta;
+                            break;
+                    }
+                }
+            }
+        }
     }
 
     public Entity detachOldNothing(Entity cell) {

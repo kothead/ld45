@@ -18,44 +18,58 @@ background
   orig: 140, 196
   offset: 0, 0
   index: -1
-border
+bloodriver
   rotate: false
   xy: 146, 109
   size: 140, 196
   orig: 140, 196
   offset: 0, 0
   index: -1
-borderenemy
+border
   rotate: false
   xy: 662, 602
   size: 140, 196
   orig: 140, 196
   offset: 0, 0
   index: -1
-cemetery
+borderenemy
   rotate: false
   xy: 806, 802
   size: 140, 196
   orig: 140, 196
   offset: 0, 0
   index: -1
-cosmetic
+cemetery
   rotate: false
   xy: 290, 109
   size: 140, 196
   orig: 140, 196
   offset: 0, 0
   index: -1
-crypt
+cosmetic
   rotate: false
   xy: 662, 402
   size: 140, 196
   orig: 140, 196
   offset: 0, 0
   index: -1
-demon
+crypt
   rotate: false
   xy: 806, 602
+  size: 140, 196
+  orig: 140, 196
+  offset: 0, 0
+  index: -1
+cursedground
+  rotate: false
+  xy: 434, 109
+  size: 140, 196
+  orig: 140, 196
+  offset: 0, 0
+  index: -1
+demon
+  rotate: false
+  xy: 806, 402
   size: 140, 196
   orig: 140, 196
   offset: 0, 0
@@ -69,69 +83,62 @@ desktile
   index: -1
 ground
   rotate: false
-  xy: 434, 109
+  xy: 578, 109
   size: 140, 196
   orig: 140, 196
   offset: 0, 0
   index: -1
 ground2
   rotate: false
-  xy: 806, 402
+  xy: 722, 202
   size: 140, 196
   orig: 140, 196
   offset: 0, 0
   index: -1
 ground3
   rotate: false
-  xy: 578, 109
+  xy: 866, 202
   size: 140, 196
   orig: 140, 196
   offset: 0, 0
   index: -1
 nothing
   rotate: false
-  xy: 722, 202
+  xy: 722, 2
   size: 140, 196
   orig: 140, 196
   offset: 0, 0
   index: -1
 presence
   rotate: false
-  xy: 866, 202
+  xy: 866, 2
   size: 140, 196
   orig: 140, 196
   offset: 0, 0
   index: -1
+
+pack2.png
+size: 1024,512
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
 presence2
   rotate: false
-  xy: 722, 2
+  xy: 2, 202
   size: 140, 196
   orig: 140, 196
   offset: 0, 0
   index: -1
 presence3
   rotate: false
-  xy: 866, 2
+  xy: 2, 2
   size: 140, 196
   orig: 140, 196
   offset: 0, 0
   index: -1
-transparent
-  rotate: false
-  xy: 662, 397
-  size: 1, 1
-  orig: 1, 1
-  offset: 0, 0
-  index: -1
-
-pack2.png
-size: 1024,256
-format: RGBA8888
-filter: Nearest,Nearest
-repeat: none
 river
   rotate: false
-  xy: 2, 2
+  xy: 146, 202
   size: 140, 196
   orig: 140, 196
   offset: 0, 0
@@ -145,6 +152,13 @@ river2
   index: -1
 river3
   rotate: false
+  xy: 290, 202
+  size: 140, 196
+  orig: 140, 196
+  offset: 0, 0
+  index: -1
+selector
+  rotate: false
   xy: 290, 2
   size: 140, 196
   orig: 140, 196
@@ -152,14 +166,14 @@ river3
   index: -1
 skeleton
   rotate: false
-  xy: 434, 2
+  xy: 434, 202
   size: 140, 196
   orig: 140, 196
   offset: 0, 0
   index: -1
 zombie
   rotate: false
-  xy: 578, 2
+  xy: 434, 2
   size: 140, 196
   orig: 140, 196
   offset: 0, 0

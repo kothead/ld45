@@ -9,6 +9,7 @@ import com.kothead.gdxjam.base.component.PositionComponent;
 import com.shoggoth.ld45.EntityManager;
 import com.shoggoth.ld45.component.*;
 import com.shoggoth.ld45.screen.GameScreen;
+import com.shoggoth.ld45.system.FieldHighlightRenderSystem;
 import com.shoggoth.ld45.system.InputSystem;
 import com.shoggoth.ld45.system.SelectionInputSystem;
 
@@ -45,6 +46,7 @@ public class CardSelector {
 
     public void animateMoveOut() {
         manager.pause(InputSystem.class);
+        manager.pause(FieldHighlightRenderSystem.class);
 
         Vector3 camera = screen.getCamera().position;
         int rowCount = cards.size() / CARDS_IN_ROW;
@@ -199,6 +201,7 @@ public class CardSelector {
                     public void onInterpolationFinished(Entity entity) {
                         manager.removeEntity(entity);
                         manager.resume(InputSystem.class);
+                        manager.resume(FieldHighlightRenderSystem.class);
                     }
                 };
                 card.add(interpolationPosition);
