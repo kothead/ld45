@@ -94,6 +94,7 @@ public class GameLogicSystem extends EntitySystem {
                 }
 
                 //TODO: if several targets are available
+                manager.checkForNothing();
                 actionQueue.nextAction();
             } else {
                 if (NothingComponent.mapper.has(sourceCard)) {
@@ -275,6 +276,7 @@ public class GameLogicSystem extends EntitySystem {
                 Interpolation.fastSlow,
                 PositionComponent.mapper.get(card).position,
                 PositionComponent.mapper.get(cell).position,
+                0,
                 0.3f
         );
         interpolationPosition.callback = new InterpolationPositionComponent.InterpolationCallback() {
@@ -298,6 +300,7 @@ public class GameLogicSystem extends EntitySystem {
                 Interpolation.fastSlow,
                 PositionComponent.mapper.get(card).position,
                 PositionComponent.mapper.get(spawned).position,
+                0,
                 1.0f
         );
         component.from.z = -1.0f;
@@ -325,15 +328,28 @@ public class GameLogicSystem extends EntitySystem {
                 Interpolation.slowFast,
                 origin,
                 aim,
+                0,
                 0.10f
         );
         component.next = new InterpolationPositionComponent(
                 Interpolation.fastSlow,
                 aim,
                 origin,
+                0,
                 0.20f
         );
         source.add(component);
     }
 
+//    public void checkFor(Direction[] directions, ComponentMapper... mappers) {
+//        Entity[][] entities = screen.getField();
+//            for (Direction direction: NOTHING_SPAWN_DIRECTIONS) {
+//                int x = j + direction.getDx();
+//                int y = i + direction.getDy();
+//                if (x >=0 && x < getFieldWidth()
+//                        && y >= 0 && y < config.get ) {
+//
+//                }
+//            }
+//    }
 }

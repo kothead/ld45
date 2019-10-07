@@ -22,7 +22,14 @@ public class InterpolationPositionSystem extends IteratingSystem {
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
         InterpolationPositionComponent component = InterpolationPositionComponent.mapper.get(entity);
-        component.elapsed += deltaTime;
+        if (component.delay > 0) {
+            component.delay -= deltaTime;
+            if (component.delay < 0) {
+                component.elapsed -= component.delay;
+            }
+        } else {
+            component.elapsed += deltaTime;
+        }
 
         Vector3 position = PositionComponent.mapper.get(entity).position;
         float oldZ = position.z;

@@ -1,6 +1,7 @@
 package com.shoggoth.ld45.util;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector3;
@@ -73,15 +74,17 @@ public class CardSelector {
             float x = startX + MARGIN_HORIZONTAL + paddingX + count % CARDS_IN_ROW * dx;
             float y = startY + MARGIN_VERTICAL + paddingY + count / CARDS_IN_ROW * dy;
 
-            boolean horizontal = Math.abs(camera.x - origin.x - config.getCardWidth() / 2.0f) >
-                    Math.abs(camera.y - origin.y - config.getCardHeight() / 2.0f);
-            float tx = horizontal ? Math.signum(camera.x - origin.x) * dx : origin.x;
-            float ty = !horizontal ? Math.signum(camera.y - origin.y) * dy: origin.y;
+            float originx = origin.x + config.getCardWidth() / 2.0f;
+            float originy = origin.y + config.getCardHeight() / 2.0f;
+            boolean horizontal = Math.abs(camera.x - originx) > Math.abs(camera.y - originy);
+            float tx = origin.x + (horizontal ? Math.signum(camera.x - originx) * dx: 0);
+            float ty = origin.y + (!horizontal ? Math.signum(camera.y - originy) * dy: 0);
 
             InterpolationPositionComponent interpolationPosition = new InterpolationPositionComponent(
                     Interpolation.smoother,
                     new Vector3(origin.x, origin.y, 1.0f),
                     new Vector3(tx, ty, 2.0f),
+                    0,
                     COMMON_ANIMATION_DURATION
             );
             interpolationPosition.callback = new InterpolationPositionComponent.InterpolationCallback() {
@@ -100,6 +103,7 @@ public class CardSelector {
                     Interpolation.smoother,
                     new Vector3(tx, ty, 2.0f),
                     new Vector3(x, y, 2.0f),
+                    0,
                     COMMON_ANIMATION_DURATION
             );
             interpolationPosition.next.callback = new InterpolationPositionComponent.InterpolationCallback() {
@@ -150,6 +154,7 @@ public class CardSelector {
         removeBlacknes();
 
         for (Entity card: cards) {
+            card.remove(SelectableComponent.class);
             Vector3 origin = PositionComponent.mapper.get(card).position;
 
             if (card == selectedCard) {
@@ -163,12 +168,14 @@ public class CardSelector {
                         Interpolation.smoother,
                         origin,
                         new Vector3(oldNothingPosition.x, oldNothingPosition.y, 0.0f),
+                        0,
                         COMMON_ANIMATION_DURATION
                 );
                 interpolationPosition.callback = new InterpolationPositionComponent.InterpolationCallback() {
                     @Override
                     public void onInterpolationFinished(Entity entity) {
                         manager.removeEntity(oldNothing);
+                        manager.checkForNothing();
                         screen.getActionQueue().nextAction();
                     }
                 };
@@ -184,6 +191,7 @@ public class CardSelector {
                         Interpolation.smoother,
                         origin,
                         calcThrowAwayPosition(origin),
+                        0,
                         COMMON_ANIMATION_DURATION
                 );
                 interpolationPosition.callback = new InterpolationPositionComponent.InterpolationCallback() {

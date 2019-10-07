@@ -14,6 +14,7 @@ public class InterpolationPositionComponent implements Component {
     public Vector3 from;
     public Vector3 to;
     public float elapsed;
+    public float delay;
     public float duration;
 
     public InterpolationPositionComponent next;
@@ -21,10 +22,12 @@ public class InterpolationPositionComponent implements Component {
 
     public InterpolationPositionComponent(Interpolation interpolation,
                                           Vector3 from, Vector3 to,
+                                          float delay,
                                           float duration) {
         this.interpolation = interpolation;
         this.from = new Vector3(from);
         this.to = new Vector3(to);
+        this.delay = delay;
         this.duration = duration;
         elapsed = 0.0f;
     }

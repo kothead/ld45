@@ -3,15 +3,15 @@ package com.shoggoth.ld45;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetDescriptor;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Interpolation;
 import com.kothead.gdxjam.base.GdxJam;
 import com.kothead.gdxjam.base.component.PositionComponent;
 import com.kothead.gdxjam.base.component.SpriteComponent;
 import com.kothead.gdxjam.base.system.RenderSystem;
+import com.kothead.gdxjam.base.util.Direction;
 import com.shoggoth.ld45.component.*;
 import com.shoggoth.ld45.screen.GameScreen;
 import com.shoggoth.ld45.system.*;
@@ -22,6 +22,13 @@ import com.shoggoth.ld45.util.Team;
 import java.util.ArrayList;
 
 public class EntityManager {
+
+    public static Direction[] NOTHING_SPAWN_DIRECTIONS = {
+            Direction.DOWN,
+            Direction.UP,
+            Direction.LEFT,
+            Direction.RIGHT
+    };
 
     private Engine engine;
     private GameScreen screen;
@@ -41,7 +48,7 @@ public class EntityManager {
         engine.addSystem(new InterpolationPositionSystem(priority++));
         engine.addSystem(new InterpolationTintSystem(priority++));
         engine.addSystem(new InterpolationScaleSystem(priority++));
-        engine.addSystem(new AISystem(priority++, screen, renderConfig));
+//        engine.addSystem(new AISystem(priority++, screen, renderConfig));
         engine.addSystem(new InputSystem(priority++, screen, renderConfig));
 
         SelectionInputSystem system = new SelectionInputSystem(priority++, screen, renderConfig);
@@ -383,6 +390,30 @@ public class EntityManager {
             }
         }
         return oldNothing;
+    }
+
+    public void checkForNothing() {
+        Entity[][] entities = screen.getField();
+        for (int i = 0; i < renderConfig.getFieldHeight(); i++) {
+            for (int j = 0; j < renderConfig.getFieldWidth(); j++) {
+                if (AttachComponent.mapper.has(entities[i][j])) continue;
+
+                for (Direction direction: NOTHING_SPAWN_DIRECTIONS) {
+                    int x = j + direction.getDx();
+                    int y = i + direction.getDy();
+
+                    if (x >=0 && x < renderConfig.getFieldWidth()
+                            && y >= 0 && y < renderConfig.getFieldHeight()
+                            && AttachComponent.mapper.has(entities[y][x])) {
+                        Entity card = AttachComponent.mapper.get(entities[y][x]).entity;
+                        if (ResourceComponent.mapper.has(card) || SpawnerComponent.mapper.has(card)) {
+                            addNothing(j, i, TeamComponent.mapper.get(card).id);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
     }
 
     public void dispose() {
