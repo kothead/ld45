@@ -10,6 +10,7 @@ import com.kothead.gdxjam.base.component.PositionComponent;
 import com.kothead.gdxjam.base.util.Direction;
 import com.shoggoth.ld45.Assets;
 import com.shoggoth.ld45.EntityManager;
+import com.shoggoth.ld45.LD45;
 import com.shoggoth.ld45.component.*;
 import com.shoggoth.ld45.component.prefix.FuriousComponent;
 import com.shoggoth.ld45.screen.GameScreen;
@@ -45,6 +46,8 @@ public class GameLogicSystem extends EntitySystem {
     private ImmutableArray<Entity> sources;
     private ImmutableArray<Entity> targets;
 
+    private ImmutableArray<Entity> cards;
+
     private GameScreen screen;
     private EntityManager manager;
     private RenderConfig config;
@@ -69,11 +72,16 @@ public class GameLogicSystem extends EntitySystem {
         nothings = engine.getEntitiesFor(Family.all(NothingComponent.class).get());
         sources = engine.getEntitiesFor(Family.all(SelectionSourceComponent.class).get());
         targets = engine.getEntitiesFor(Family.all(SelectionTargetComponent.class).get());
+        cards = engine.getEntitiesFor(Family.all(CardComponent.class).get());
     }
 
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
+
+        if (getAmountOfCardsForTeam(1) == 0) {
+            ((LD45)screen.getGame()).showGameScreen();
+        }
 
         if (sources.size() > 0) {
             Entity source = sources.first();
@@ -331,7 +339,7 @@ public class GameLogicSystem extends EntitySystem {
 
     private void spawn(Entity card, Entity cell) {
         manager.pause(FieldHighlightRenderSystem.class);
-        manager.resume(AISystem.class);
+        manager.pause(AISystem.class);
         setSelectable();
         cell.remove(SelectionTargetComponent.class);
 
@@ -395,7 +403,7 @@ public class GameLogicSystem extends EntitySystem {
                 0,
                 0.20f
         );
-        component.callback = new InterpolationPositionComponent.InterpolationCallback() {
+        component.next.callback = new InterpolationPositionComponent.InterpolationCallback() {
             @Override
             public void onInterpolationFinished(Entity entity) {
                 HealthComponent component = HealthComponent.mapper.get(target);
@@ -419,6 +427,16 @@ public class GameLogicSystem extends EntitySystem {
             if (furious != null) furious.done = 0;
             clearSelection();
         }
+    }
+
+    private int getAmountOfCardsForTeam(int teamId) {
+        int amount = 0;
+        for (Entity card : cards) {
+            if (TeamComponent.mapper.get(card).id == teamId) {
+                amount++;
+            }
+        }
+        return amount;
     }
 
 //    public void checkFor(Direction[] directions, ComponentMapper... mappers) {

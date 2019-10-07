@@ -26,6 +26,7 @@ public class AISystem extends SortedIteratingSystem {
     private ImmutableArray<Entity> teamCards;
 
     private int lastUnitId = -1;
+    private int switchesCount = 0;
     private List<Entity> unitQueue = new ArrayList<>();
 
     private Queue<Wave> waves = new ArrayDeque<Wave>() {{
@@ -115,8 +116,8 @@ public class AISystem extends SortedIteratingSystem {
         //spawn new units
         if (unitQueue.size() == 0) {
             if (waves.isEmpty()) {
-                // TODO
                 Gdx.app.log("Test", "We've won!!!");
+                ((LD45) screen.getGame()).showGameScreen();
                 return;
             }
 
@@ -138,12 +139,17 @@ public class AISystem extends SortedIteratingSystem {
         Entity card = getActiveUnit();
         Entity cell = AttachComponent.mapper.get(card).entity;
         Gdx.app.log("Test", "Card " + TeamComponent.mapper.get(card).componentId + " is at work at " + CellComponent.mapper.get(cell).getX() + ", " + CellComponent.mapper.get(cell).getY());
-        if (SelectableComponent.mapper.has(cell) && !SelectionSourceComponent.mapper.has(cell)) {
-            cell.add(new SelectionSourceComponent());
-            Gdx.app.log("Test", "Unit at " + CellComponent.mapper.get(cell).getX() + ", " + CellComponent.mapper.get(cell).getY() + " is set to active");
-            return;
+        if (SelectableComponent.mapper.has(cell)) {
+            if (!SelectionSourceComponent.mapper.has(cell)) {
+                cell.add(new SelectionSourceComponent());
+                Gdx.app.log("Test", "Unit at " + CellComponent.mapper.get(cell).getX() + ", " + CellComponent.mapper.get(cell).getY() + " is set to active");
+                return;
+            } else {
+                Gdx.app.log("Test", "Already active at " + CellComponent.mapper.get(cell).getX() + ", " + CellComponent.mapper.get(cell).getY() + " " + selectables.size());
+            }
         } else {
-            Gdx.app.log("Test", "Already active at " + CellComponent.mapper.get(cell).getX() + ", " + CellComponent.mapper.get(cell).getY() + " " + selectables.size());
+            Gdx.app.log("Test", "Active card is not selectable");
+            return;
         }
 
         // attack
@@ -158,10 +164,9 @@ public class AISystem extends SortedIteratingSystem {
         // go
         List<Vector2> path = getPathToNearestEnemyCard(cell, team);
         if (path.isEmpty()) {
+            Gdx.app.log("Test", "Path is empty, next action");
             cell.remove(SelectionSourceComponent.class);
             activateNext();
-            Gdx.app.log("Test", "Path is empty, next action");
-            // TODO: detect if all unites are passed
             actionQueue.nextAction();
             return;
         }
@@ -173,6 +178,11 @@ public class AISystem extends SortedIteratingSystem {
             activateNext();
         }
         Gdx.app.log("Test", "Moving: " + x + ", " + y + " is set to target");
+
+        if (switchesCount >= unitQueue.size()) {
+            Gdx.app.log("Test", "All units are passed, next action");
+            actionQueue.nextAction();
+        }
     }
 
     @Override
@@ -327,6 +337,7 @@ public class AISystem extends SortedIteratingSystem {
 
     public void activateNext() {
         lastUnitId++;
+        switchesCount++;
     }
 
     public Entity getActiveUnit() {
@@ -342,6 +353,7 @@ public class AISystem extends SortedIteratingSystem {
         }
 
         lastUnitId = TeamComponent.mapper.get(unitQueue.get(0)).componentId;
+        switchesCount = 0;
         return unitQueue.get(0);
     }
 }
