@@ -60,7 +60,7 @@ public class GameScreen extends BaseScreen {
     }
 
     public void showCardSelection(Entity sourceCard, List<Entity> cards) {
-        selector = new CardSelector(this, GdxJam.engine(), renderConfig, sourceCard, cards);
+        selector = new CardSelector(this, manager, renderConfig, sourceCard, cards);
         selector.animateMoveOut();
     }
 

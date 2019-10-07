@@ -1,19 +1,12 @@
 package com.shoggoth.ld45.util;
 
-import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector3;
-import com.kothead.gdxjam.base.GdxJam;
 import com.kothead.gdxjam.base.component.PositionComponent;
-import com.kothead.gdxjam.base.component.SpriteComponent;
-import com.shoggoth.ld45.Assets;
-import com.shoggoth.ld45.component.InterpolationPositionComponent;
-import com.shoggoth.ld45.component.InterpolationScaleComponent;
-import com.shoggoth.ld45.component.InterpolationTintComponent;
-import com.shoggoth.ld45.component.SelectableComponent;
+import com.shoggoth.ld45.EntityManager;
+import com.shoggoth.ld45.component.*;
 import com.shoggoth.ld45.screen.GameScreen;
 import com.shoggoth.ld45.system.InputSystem;
 import com.shoggoth.ld45.system.SelectionInputSystem;
@@ -31,15 +24,15 @@ public class CardSelector {
     private static final int CARDS_IN_ROW = 3;
 
     private GameScreen screen;
-    private Engine engine;
+    private EntityManager manager;
     private RenderConfig config;
     private Entity sourceCard;
     private List<Entity> cards;
     private Entity blackness;
 
-    public CardSelector(GameScreen screen, Engine engine, RenderConfig config, Entity sourceCard, List<Entity> cards) {
+    public CardSelector(GameScreen screen, EntityManager manager, RenderConfig config, Entity sourceCard, List<Entity> cards) {
         this.screen = screen;
-        this.engine = engine;
+        this.manager = manager;
         this.config = config;
         this.sourceCard = sourceCard;
         this.cards = cards;
@@ -50,7 +43,7 @@ public class CardSelector {
     }
 
     public void animateMoveOut() {
-        engine.getSystem(InputSystem.class).setProcessing(false);
+        manager.pause(InputSystem.class);
 
         Vector3 camera = screen.getCamera().position;
         int rowCount = cards.size() / CARDS_IN_ROW;
@@ -112,7 +105,7 @@ public class CardSelector {
             interpolationPosition.next.callback = new InterpolationPositionComponent.InterpolationCallback() {
                 @Override
                 public void onInterpolationFinished(Entity entity) {
-                    engine.getSystem(SelectionInputSystem.class).setProcessing(true);
+                    manager.resume(SelectionInputSystem.class);
                 }
             };
             entity.add(interpolationPosition);
@@ -123,15 +116,7 @@ public class CardSelector {
     }
 
     private void createBlackness() {
-        blackness = new Entity();
-        Sprite sprite = new Sprite(GdxJam.assets().get(Assets.images.DESKTILE));
-        sprite.setSize(screen.getWorldWidth(), screen.getWorldHeight());
-        blackness.add(new SpriteComponent(sprite));
-        blackness.add(new PositionComponent(
-                screen.getCamera().position.x - screen.getWorldWidth() / 2.0f,
-                screen.getCamera().position.y - screen.getWorldHeight() / 2.0f,
-                1.0f
-        ));
+        blackness = manager.addBlackness();
         blackness.add(new InterpolationTintComponent(
                 Interpolation.smoother,
                 Color.BLACK,
@@ -140,7 +125,6 @@ public class CardSelector {
                 COMMON_ANIMATION_DURATION,
                 COMMON_ANIMATION_DURATION
         ));
-        engine.addEntity(blackness);
     }
 
     private void removeBlacknes() {
@@ -155,29 +139,36 @@ public class CardSelector {
         interpolationTint.callback = new InterpolationTintComponent.InterpolationCallback() {
             @Override
             public void onInterpolationFinished(Entity entity) {
-                engine.removeEntity(entity);
+                manager.removeEntity(entity);
             }
         };
         blackness.add(interpolationTint);
     }
 
     public void animateSelected(Entity selectedCard) {
-        engine.getSystem(SelectionInputSystem.class).setProcessing(false);
+        manager.pause(SelectionInputSystem.class);
         removeBlacknes();
 
         for (Entity card: cards) {
             Vector3 origin = PositionComponent.mapper.get(card).position;
 
             if (card == selectedCard) {
+                Entity cell = AttachComponent.mapper.get(sourceCard).entity;
+                final Entity oldNothing = manager.detachOldNothing(cell);
+                Vector3 oldNothingPosition = PositionComponent.mapper.get(sourceCard).position;
+
+                manager.attach(cell, card);
+
                 InterpolationPositionComponent interpolationPosition = new InterpolationPositionComponent(
                         Interpolation.smoother,
                         origin,
-                        PositionComponent.mapper.get(sourceCard).position,
+                        new Vector3(oldNothingPosition.x, oldNothingPosition.y, 0.0f),
                         COMMON_ANIMATION_DURATION
                 );
                 interpolationPosition.callback = new InterpolationPositionComponent.InterpolationCallback() {
                     @Override
                     public void onInterpolationFinished(Entity entity) {
+                        manager.removeEntity(oldNothing);
                         screen.getActionQueue().nextAction();
                     }
                 };
@@ -198,7 +189,8 @@ public class CardSelector {
                 interpolationPosition.callback = new InterpolationPositionComponent.InterpolationCallback() {
                     @Override
                     public void onInterpolationFinished(Entity entity) {
-                        engine.removeEntity(entity);
+                        manager.removeEntity(entity);
+                        manager.resume(InputSystem.class);
                     }
                 };
                 card.add(interpolationPosition);

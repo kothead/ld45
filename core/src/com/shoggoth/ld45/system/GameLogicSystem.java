@@ -264,24 +264,33 @@ public class GameLogicSystem extends EntitySystem {
         screen.showCardSelection(card, cards);
     }
 
-    private void move(Entity card, Entity cell) {
+    private void move(final Entity card, final Entity cell) {
         setSelectable();
         clearSelection();
 
-        CellComponent cellComponent = CellComponent.mapper.get(cell);
+        final Entity oldNothing = manager.detachOldNothing(cell);
         manager.attach(cell, card);
 
-        card.add(new InterpolationPositionComponent(
+        InterpolationPositionComponent interpolationPosition = new InterpolationPositionComponent(
                 Interpolation.fastSlow,
                 PositionComponent.mapper.get(card).position,
                 PositionComponent.mapper.get(cell).position,
                 0.3f
-        ));
+        );
+        interpolationPosition.callback = new InterpolationPositionComponent.InterpolationCallback() {
+            @Override
+            public void onInterpolationFinished(Entity entity) {
+                if (oldNothing != null) getEngine().removeEntity(oldNothing);
+            }
+        };
+        card.add(interpolationPosition);
     }
 
     private void spawn(Entity card, Entity cell) {
         setSelectable();
         clearSelection();
+
+        final Entity oldNothing = manager.detachOldNothing(cell);
 
         CellComponent cellComponent = CellComponent.mapper.get(cell);
         Entity spawned = SpawnerComponent.mapper.get(card).spawn(cellComponent.getX(), cellComponent.getY());
@@ -292,6 +301,12 @@ public class GameLogicSystem extends EntitySystem {
                 1.0f
         );
         component.from.z = -1.0f;
+        component.callback = new InterpolationPositionComponent.InterpolationCallback() {
+            @Override
+            public void onInterpolationFinished(Entity entity) {
+                if (oldNothing != null) getEngine().removeEntity(oldNothing);
+            }
+        };
         spawned.add(component);
     }
 

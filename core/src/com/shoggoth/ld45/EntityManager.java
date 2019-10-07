@@ -2,8 +2,13 @@ package com.shoggoth.ld45;
 
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.gdx.assets.AssetDescriptor;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Interpolation;
+import com.kothead.gdxjam.base.GdxJam;
 import com.kothead.gdxjam.base.component.PositionComponent;
 import com.kothead.gdxjam.base.component.SpriteComponent;
 import com.kothead.gdxjam.base.system.RenderSystem;
@@ -47,6 +52,18 @@ public class EntityManager {
         engine.addSystem(new RenderSystem(priority++, screen.batch()));
         engine.addSystem(new FieldHighlightRenderSystem(priority++, screen.shapes(), renderConfig));
         engine.addSystem(new GameLogicSystem(priority++, screen, this, renderConfig, teams));
+    }
+
+    public <T extends EntitySystem> void pause(Class<T> systemType) {
+        engine.getSystem(systemType).setProcessing(false);
+    }
+
+    public <T extends EntitySystem> void resume(Class<T> systemType) {
+        engine.getSystem(systemType).setProcessing(true);
+    }
+
+    public void removeEntity(Entity entity) {
+        engine.removeEntity(entity);
     }
 
     public Entity addCell(int x, int y) {
@@ -232,7 +249,7 @@ public class EntityManager {
         entity.add(new SpawnerComponent(new SpawnerComponent.Spawner() {
             @Override
             public Entity spawn(int x, int y) {
-                Entity entity = addSkeleton(x, y, teamId);
+                Entity entity = addDemon(x, y, teamId);
                 return entity;
             }
         }, 1, 3));
@@ -326,6 +343,20 @@ public class EntityManager {
         return entity;
     }
 
+    public Entity addBlackness() {
+        Entity entity = new Entity();
+        Sprite sprite = new Sprite(GdxJam.assets().get(Assets.images.DESKTILE));
+        sprite.setSize(screen.getWorldWidth(), screen.getWorldHeight());
+        entity.add(new SpriteComponent(sprite));
+        entity.add(new PositionComponent(
+                screen.getCamera().position.x - screen.getWorldWidth() / 2.0f,
+                screen.getCamera().position.y - screen.getWorldHeight() / 2.0f,
+                1.0f
+        ));
+        engine.addEntity(entity);
+        return entity;
+    }
+
     public void attach(Entity cell, Entity card) {
         if (!CellComponent.mapper.has(cell)) return;
         if (!CardComponent.mapper.has(card)) return;
@@ -337,6 +368,21 @@ public class EntityManager {
 
         cell.add(new AttachComponent(card));
         card.add(new AttachComponent(cell));
+    }
+
+    public Entity detachOldNothing(Entity cell) {
+        Entity oldNothing = null;
+        if (AttachComponent.mapper.has(cell)) {
+            oldNothing = AttachComponent.mapper.get(cell).entity;
+            if (NothingComponent.mapper.has(oldNothing)) {
+                PositionComponent.mapper.get(oldNothing).position.z = -1.0f;
+                oldNothing.remove(AttachComponent.class);
+                cell.remove(AttachComponent.class);
+            } else {
+                oldNothing = null;
+            }
+        }
+        return oldNothing;
     }
 
     public void dispose() {
