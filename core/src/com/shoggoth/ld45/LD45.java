@@ -24,6 +24,7 @@ public class LD45 extends GdxJamGame {
 						new GameScreen.Builder(),
 						new LoadingScreen.Builder(),
 						Assets.images.BORDER,
+						Assets.images.BORDERENEMY,
 						Assets.images.BACKGROUND,
 						Assets.images.RIVER,
 						Assets.images.RIVER2,

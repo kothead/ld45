@@ -78,7 +78,8 @@ public class AISystem extends EntitySystem {
     }
 
     private void goToNearestUnit() {
-        
+        int[][] path = new int[renderConfig.getFieldHeight()][renderConfig.getFieldWidth()];
+        int d = 0;
 
     }
 
