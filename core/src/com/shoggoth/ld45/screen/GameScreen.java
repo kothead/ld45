@@ -9,7 +9,6 @@ import com.kothead.gdxjam.base.GdxJamGame;
 import com.kothead.gdxjam.base.screen.BaseScreen;
 import com.kothead.gdxjam.base.screen.ScreenBuilder;
 import com.shoggoth.ld45.EntityManager;
-import com.shoggoth.ld45.component.prefix.FuriousComponent;
 import com.shoggoth.ld45.util.*;
 
 import java.util.List;

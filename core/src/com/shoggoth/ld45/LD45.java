@@ -6,7 +6,11 @@ import com.kothead.gdxjam.base.data.GdxJamConfiguration;
 import com.kothead.gdxjam.base.screen.LoadingScreen;
 import com.shoggoth.ld45.screen.GameScreen;
 
+import java.util.Random;
+
 public class LD45 extends GdxJamGame {
+
+	public static Random random = new Random(13);
 
 	public LD45() {
 		super(new GameConfiguration());

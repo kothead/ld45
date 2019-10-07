@@ -8,18 +8,15 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.kothead.gdxjam.base.util.Direction;
+import com.shoggoth.ld45.LD45;
 import com.shoggoth.ld45.component.*;
+import com.shoggoth.ld45.component.prefix.FuriousComponent;
 import com.shoggoth.ld45.screen.GameScreen;
-import com.shoggoth.ld45.util.AITeam;
-import com.shoggoth.ld45.util.ActionQueue;
-import com.shoggoth.ld45.util.RenderConfig;
-import com.shoggoth.ld45.util.Team;
+import com.shoggoth.ld45.util.*;
 
 import java.util.*;
 
 public class AISystem extends SortedIteratingSystem {
-
-    private Random random = new Random();
 
     private GameScreen screen;
     private RenderConfig config;
@@ -30,6 +27,47 @@ public class AISystem extends SortedIteratingSystem {
 
     private int lastUnitId = -1;
     private List<Entity> unitQueue = new ArrayList<>();
+
+    private Queue<Wave> waves = new ArrayDeque<Wave>() {{
+        add(new Wave(2, new SpawnerComponent.Spawner() {
+            @Override
+            public Entity spawn(int x, int y) {
+                return spawn(x, y, 2);
+            }
+
+            @Override
+            public Entity spawn(int x, int y, int teamId) {
+                Entity entity = screen.getEntityManager().addSkeleton(x, y, teamId);
+                return entity;
+            }
+        }));
+        add(new Wave(3, new SpawnerComponent.Spawner() {
+            @Override
+            public Entity spawn(int x, int y) {
+                return spawn(x, y, 2);
+            }
+
+            @Override
+            public Entity spawn(int x, int y, int teamId) {
+                Entity entity = screen.getEntityManager().addZombie(x, y, teamId);
+                return entity;
+            }
+        }));
+        add(new Wave(4, new SpawnerComponent.Spawner() {
+            @Override
+            public Entity spawn(int x, int y) {
+                return spawn(x, y, 2);
+            }
+
+            @Override
+            public Entity spawn(int x, int y, int teamId) {
+                Entity entity = screen.getEntityManager().addDemon(x, y, teamId);
+                return entity;
+            }
+        }));
+    }};
+
+    private Wave currentWave;
 
     public AISystem(int priority, GameScreen screen, RenderConfig renderConfig) {
         super(Family.all(TeamComponent.class).get(),
@@ -75,10 +113,21 @@ public class AISystem extends SortedIteratingSystem {
         }
 
         //spawn new units
-        if (unitQueue.size() < team.getUnitsLimit()) {
+        if (unitQueue.size() == 0) {
+            if (waves.isEmpty()) {
+                // TODO
+                Gdx.app.log("Test", "We've won!!!");
+                return;
+            }
+
+            Gdx.app.log("Test", "New wave started");
+            currentWave = waves.poll();
+        }
+
+        if (unitQueue.size() < currentWave.getLimit() && !currentWave.isAllSpawned()) {
             Vector2 position = getRandomEmptyCoordinate();
             if (position.x != -1 || position.y != -1) {
-                addRandomUnit(team, position);
+                currentWave.spawn((int) position.x, (int) position.y, team.getId());
                 Gdx.app.log("Test", "New unit at " + position.x + ", " + position.y);
                 actionQueue.nextAction();
                 return;
@@ -87,12 +136,14 @@ public class AISystem extends SortedIteratingSystem {
 
         //select active unit
         Entity card = getActiveUnit();
-        Gdx.app.log("Test", "Card " + TeamComponent.mapper.get(card).componentId + " is at work");
         Entity cell = AttachComponent.mapper.get(card).entity;
+        Gdx.app.log("Test", "Card " + TeamComponent.mapper.get(card).componentId + " is at work at " + CellComponent.mapper.get(cell).getX() + ", " + CellComponent.mapper.get(cell).getY());
         if (SelectableComponent.mapper.has(cell) && !SelectionSourceComponent.mapper.has(cell)) {
             cell.add(new SelectionSourceComponent());
             Gdx.app.log("Test", "Unit at " + CellComponent.mapper.get(cell).getX() + ", " + CellComponent.mapper.get(cell).getY() + " is set to active");
             return;
+        } else {
+            Gdx.app.log("Test", "Already active at " + CellComponent.mapper.get(cell).getX() + ", " + CellComponent.mapper.get(cell).getY() + " " + selectables.size());
         }
 
         // attack
@@ -118,7 +169,9 @@ public class AISystem extends SortedIteratingSystem {
         int x = (int) path.get(path.size() - 1).x;
         int y = (int) path.get(path.size() - 1).y;
         screen.getField()[y][x].add(new SelectionTargetComponent());
-        activateNext();
+        if (!FuriousComponent.mapper.has(card)) {
+            activateNext();
+        }
         Gdx.app.log("Test", "Moving: " + x + ", " + y + " is set to target");
     }
 
@@ -219,24 +272,6 @@ public class AISystem extends SortedIteratingSystem {
         return !(AttachComponent.mapper.has(cell) && TeamComponent.mapper.get(AttachComponent.mapper.get(cell).entity).id == team.getId());
     }
 
-    private Entity addRandomUnit(AITeam team, Vector2 position) {
-        int unitType = random.nextInt(3);
-        Entity unit;
-        switch (unitType) {
-            case 0:
-                unit = screen.getEntityManager().addSkeleton((int) position.x, (int) position.y, team.getId());
-                break;
-            case 1:
-                unit = screen.getEntityManager().addZombie((int) position.x, (int) position.y, team.getId());
-                break;
-            case 2:
-            default:
-                unit = screen.getEntityManager().addDemon((int) position.x, (int) position.y, team.getId());
-                break;
-        }
-        return unit;
-    }
-
     private Entity findEnemyUnitInAdjacentCells(Team team) {
         for (Entity entity : selectables) {
             if (AttachComponent.mapper.has(entity)) {
@@ -255,7 +290,7 @@ public class AISystem extends SortedIteratingSystem {
         int perimeter = 2 * config.getFieldWidth() + 2 * config.getFieldHeight();
         int attempts = 0;
         while ((position.x == -1 || position.y == -1) && attempts < perimeter) {
-            int randomInt = random.nextInt(perimeter);
+            int randomInt = LD45.random.nextInt(perimeter);
             int x = 0;
             int y = 0;
             if (randomInt < config.getFieldWidth()) {
@@ -301,6 +336,7 @@ public class AISystem extends SortedIteratingSystem {
 
         for (Entity entity : unitQueue) {
             if (TeamComponent.mapper.get(entity).componentId >= lastUnitId) {
+                lastUnitId = TeamComponent.mapper.get(entity).componentId;
                 return entity;
             }
         }
