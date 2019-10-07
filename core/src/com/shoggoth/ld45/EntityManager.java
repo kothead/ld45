@@ -48,7 +48,7 @@ public class EntityManager {
         engine.addSystem(new InterpolationPositionSystem(priority++));
         engine.addSystem(new InterpolationTintSystem(priority++));
         engine.addSystem(new InterpolationScaleSystem(priority++));
-//        engine.addSystem(new AISystem(priority++, screen, renderConfig));
+        engine.addSystem(new AISystem(priority++, screen, renderConfig));
         engine.addSystem(new InputSystem(priority++, screen, renderConfig));
 
         SelectionInputSystem system = new SelectionInputSystem(priority++, screen, renderConfig);
@@ -70,6 +70,10 @@ public class EntityManager {
     }
 
     public void removeEntity(Entity entity) {
+        if (AttachComponent.mapper.has(entity)) {
+            Entity cell = AttachComponent.mapper.get(entity).entity;
+            AttachComponent.mapper.get(cell).entity = null;
+        }
         engine.removeEntity(entity);
     }
 
@@ -110,6 +114,8 @@ public class EntityManager {
     public Entity addSkeleton(int x, int y, int teamId) {
         Entity entity = addCard(x, y, teamId);
         entity.add(new CreatureComponent());
+        entity.add(new HealthComponent(5));
+        entity.add(new DamageComponent(4));
         CardSprite sprite = new CardSprite(renderConfig);
         sprite.setBorder(Assets.images.BORDER);
         sprite.setBackground(Assets.images.BACKGROUND);
@@ -130,6 +136,8 @@ public class EntityManager {
     public Entity addZombie(int x, int y, int teamId) {
         Entity entity = addCard(x, y, teamId);
         entity.add(new CreatureComponent());
+        entity.add(new HealthComponent(10));
+        entity.add(new DamageComponent(5));
         CardSprite sprite = new CardSprite(renderConfig);
         sprite.setBorder(Assets.images.BORDER);
         sprite.setBackground(Assets.images.BACKGROUND);
@@ -150,6 +158,8 @@ public class EntityManager {
     public Entity addDemon(int x, int y, int teamId) {
         Entity entity = addCard(x, y, teamId);
         entity.add(new CreatureComponent());
+        entity.add(new HealthComponent(6));
+        entity.add(new DamageComponent(10));
         CardSprite sprite = new CardSprite(renderConfig);
         sprite.setBorder(Assets.images.BORDER);
         sprite.setBackground(Assets.images.BACKGROUND);

@@ -45,6 +45,7 @@ public class GameLogicSystem extends EntitySystem {
     private EntityManager manager;
     private RenderConfig config;
     private ActionQueue actionQueue;
+    private boolean pendingAction = false;
 
     public GameLogicSystem(int priority, GameScreen screen, EntityManager manager, RenderConfig config, Team[] teams) {
         super(priority);
@@ -93,15 +94,17 @@ public class GameLogicSystem extends EntitySystem {
                     attack(sourceCard, targetCard);
                 }
 
-                //TODO: if several targets are available
                 manager.checkForNothing();
-                actionQueue.nextAction();
+
+                if (!SelectionSourceComponent.mapper.has(source)) {
+                    actionQueue.nextAction();
+                }
             } else {
                 if (NothingComponent.mapper.has(sourceCard)) {
                     showCardSelector(source, sourceCard);
                     setSelectable(source);
                 } else if (SpawnerComponent.mapper.has(sourceCard)) {
-                    setSelectable(combine(
+                    if (setSelectable(combine(
                             without(
                                     adjacent(source, SPAWN_DIRECTIONS),
                                     CreatureComponent.mapper,
@@ -109,9 +112,12 @@ public class GameLogicSystem extends EntitySystem {
                                     ResourceComponent.mapper
                             ),
                             Arrays.asList(source)
-                    ));
+                    )).size() == 0 && pendingAction) {
+                        pendingAction = false;
+                        actionQueue.nextAction();
+                    }
                 } else if (isTeammateCreature(sourceCard)) {
-                    setSelectable(combine(
+                    if (setSelectable(combine(
                             // TODO: process REAPING and SAINT prefix
                             withoutTeammates(
                                     adjacent(source, ACTION_DIRECTIONS),
@@ -119,10 +125,17 @@ public class GameLogicSystem extends EntitySystem {
                                     ResourceComponent.mapper
                             ),
                             Arrays.asList(source)
-                    ));
+                    )).size() == 0 && pendingAction) {
+                        pendingAction = false;
+                        actionQueue.nextAction();
+                    }
                 }
             }
         } else {
+            if (pendingAction) {
+                pendingAction = false;
+                actionQueue.nextAction();
+            }
             setSelectable(combine(
                     getCellsOfTeammate(nothings),
                     getCellsOfTeammate(spawners),
@@ -216,11 +229,11 @@ public class GameLogicSystem extends EntitySystem {
     }
 
 
-    private void setSelectable(Entity... entities) {
-        setSelectable(Arrays.asList(entities));
+    private List<Entity> setSelectable(Entity... entities) {
+        return setSelectable(Arrays.asList(entities));
     }
 
-    private void setSelectable(List<Entity> entities) {
+    private List<Entity> setSelectable(List<Entity> entities) {
         for (Entity entity: cells) {
             entity.remove(SelectableComponent.class);
         }
@@ -228,6 +241,8 @@ public class GameLogicSystem extends EntitySystem {
         for (Entity entity: entities) {
             entity.add(new SelectableComponent());
         }
+
+        return entities;
     }
 
     public void clearSelection() {
@@ -290,12 +305,13 @@ public class GameLogicSystem extends EntitySystem {
 
     private void spawn(Entity card, Entity cell) {
         setSelectable();
-        clearSelection();
+        cell.remove(SelectionTargetComponent.class);
 
         final Entity oldNothing = manager.detachOldNothing(cell);
 
         CellComponent cellComponent = CellComponent.mapper.get(cell);
-        Entity spawned = SpawnerComponent.mapper.get(card).spawn(cellComponent.getX(), cellComponent.getY());
+        SpawnerComponent spawnerComponent = SpawnerComponent.mapper.get(card);
+        Entity spawned = spawnerComponent.spawn(cellComponent.getX(), cellComponent.getY());
         InterpolationPositionComponent component = new InterpolationPositionComponent(
                 Interpolation.fastSlow,
                 PositionComponent.mapper.get(card).position,
@@ -311,9 +327,17 @@ public class GameLogicSystem extends EntitySystem {
             }
         };
         spawned.add(component);
+
+        spawnerComponent.spawned++;
+        if (spawnerComponent.spawned < spawnerComponent.spawnCount) {
+            pendingAction = true;
+        } else {
+            clearSelection();
+            spawnerComponent.spawned = 0;
+        }
     }
 
-    private void attack(Entity source, Entity target) {
+    private void attack(final Entity source, final Entity target) {
         setSelectable();
         clearSelection();
 
@@ -338,6 +362,16 @@ public class GameLogicSystem extends EntitySystem {
                 0,
                 0.20f
         );
+        component.callback = new InterpolationPositionComponent.InterpolationCallback() {
+            @Override
+            public void onInterpolationFinished(Entity entity) {
+                HealthComponent component = HealthComponent.mapper.get(target);
+                component.health -= DamageComponent.mapper.get(source).damage;
+                if (component.health <= 0) {
+                    manager.removeEntity(target);
+                }
+            }
+        };
         source.add(component);
     }
 

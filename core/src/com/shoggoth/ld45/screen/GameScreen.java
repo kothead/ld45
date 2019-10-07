@@ -51,7 +51,7 @@ public class GameScreen extends BaseScreen {
         }
 
         manager.addNothing(0, 1, players.getId());
-        manager.addAbyss(0, 0, players.getId());
+        manager.addCrypt(0, 0, players.getId());
         manager.addZombie(1, 2, players.getId());
 
         manager.addCemetery(5, 1, players.getId());

@@ -11,6 +11,7 @@ public class SpawnerComponent implements Component {
     public int limit;
     public int healthBuff = 0;
     public int damageBuff = 0;
+    public int spawned = 0;
 
     private Spawner spawner;
 
