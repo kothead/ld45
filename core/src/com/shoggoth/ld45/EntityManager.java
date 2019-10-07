@@ -6,6 +6,7 @@ import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 import com.kothead.gdxjam.base.GdxJam;
 import com.kothead.gdxjam.base.component.PositionComponent;
 import com.kothead.gdxjam.base.component.SpriteComponent;
@@ -48,15 +49,20 @@ public class EntityManager {
 
     public void registerSystems() {
         int priority = 0;
-        engine.addSystem(new InterpolationPositionSystem(priority++));
+        engine.addSystem(new InterpolationPositionSystem(priority++, screen, this));
         engine.addSystem(new InterpolationTintSystem(priority++));
         engine.addSystem(new InterpolationScaleSystem(priority++));
         engine.addSystem(new AISystem(priority++, screen, renderConfig));
         engine.addSystem(new InputSystem(priority++, screen, renderConfig));
+        CameraControlSystem cameraControlSystem = new CameraControlSystem(priority++, screen, this);
+        cameraControlSystem.setCameraLimits(new Rectangle(0, 0, renderConfig.getMaxWidth(), renderConfig.getMaxHeight()));
+        cameraControlSystem.setMaxCameraSpeed(500.0f);
+        cameraControlSystem.setProcessing(false);
+        engine.addSystem(cameraControlSystem);
 
-        SelectionInputSystem system = new SelectionInputSystem(priority++, screen, renderConfig);
-        system.setProcessing(false);
-        engine.addSystem(system);
+        SelectionInputSystem selectionInputSystem = new SelectionInputSystem(priority++, screen, renderConfig);
+        selectionInputSystem.setProcessing(false);
+        engine.addSystem(selectionInputSystem);
 
         engine.addSystem(new BackgroundRenderSystem(priority++, screen, renderConfig));
         engine.addSystem(new RenderSystem(priority++, screen.batch()));

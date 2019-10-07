@@ -9,6 +9,7 @@ import com.kothead.gdxjam.base.component.PositionComponent;
 import com.shoggoth.ld45.EntityManager;
 import com.shoggoth.ld45.component.*;
 import com.shoggoth.ld45.screen.GameScreen;
+import com.shoggoth.ld45.system.AISystem;
 import com.shoggoth.ld45.system.FieldHighlightRenderSystem;
 import com.shoggoth.ld45.system.InputSystem;
 import com.shoggoth.ld45.system.SelectionInputSystem;
@@ -45,6 +46,7 @@ public class CardSelector {
     }
 
     public void animateMoveOut() {
+        manager.pause(AISystem.class);
         manager.pause(InputSystem.class);
         manager.pause(FieldHighlightRenderSystem.class);
 
@@ -202,6 +204,7 @@ public class CardSelector {
                         manager.removeEntity(entity);
                         manager.resume(InputSystem.class);
                         manager.resume(FieldHighlightRenderSystem.class);
+                        manager.resume(AISystem.class);
                     }
                 };
                 card.add(interpolationPosition);

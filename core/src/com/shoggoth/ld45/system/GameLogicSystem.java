@@ -288,6 +288,7 @@ public class GameLogicSystem extends EntitySystem {
     private void move(final Entity card, final Entity cell) {
         GdxJam.assets().get(Assets.sounds.CARD).play();
         manager.pause(FieldHighlightRenderSystem.class);
+        manager.pause(AISystem.class);
         setSelectable();
         clearSelection();
 
@@ -301,7 +302,7 @@ public class GameLogicSystem extends EntitySystem {
                 Interpolation.fastSlow,
                 origin,
                 PositionComponent.mapper.get(cell).position,
-                0,
+                actionQueue.getCurrentTeam().isPlayer() ? 0.0f : 1.0f,
                 0.3f
         );
         interpolationPosition.callback = new InterpolationPositionComponent.InterpolationCallback() {
@@ -309,6 +310,7 @@ public class GameLogicSystem extends EntitySystem {
             public void onInterpolationFinished(Entity entity) {
                 if (oldNothing != null) getEngine().removeEntity(oldNothing);
                 manager.resume(FieldHighlightRenderSystem.class);
+                manager.resume(AISystem.class);
             }
         };
         card.add(interpolationPosition);
@@ -327,6 +329,7 @@ public class GameLogicSystem extends EntitySystem {
 
     private void spawn(Entity card, Entity cell) {
         manager.pause(FieldHighlightRenderSystem.class);
+        manager.resume(AISystem.class);
         setSelectable();
         cell.remove(SelectionTargetComponent.class);
 
@@ -339,7 +342,7 @@ public class GameLogicSystem extends EntitySystem {
                 Interpolation.fastSlow,
                 PositionComponent.mapper.get(card).position,
                 PositionComponent.mapper.get(spawned).position,
-                0,
+                actionQueue.getCurrentTeam().isPlayer() ? 0.0f : 1.0f,
                 1.0f
         );
         component.from.z = -1.0f;
@@ -348,6 +351,7 @@ public class GameLogicSystem extends EntitySystem {
             public void onInterpolationFinished(Entity entity) {
                 if (oldNothing != null) getEngine().removeEntity(oldNothing);
                 manager.resume(FieldHighlightRenderSystem.class);
+                manager.resume(AISystem.class);
             }
         };
         spawned.add(component);
@@ -363,6 +367,7 @@ public class GameLogicSystem extends EntitySystem {
 
     private void attack(final Entity source, final Entity target) {
         manager.pause(FieldHighlightRenderSystem.class);
+        manager.pause(AISystem.class);
         setSelectable();
         Entity cell = AttachComponent.mapper.get(target).entity;
         cell.remove(SelectionTargetComponent.class);
@@ -378,7 +383,7 @@ public class GameLogicSystem extends EntitySystem {
                 Interpolation.slowFast,
                 origin,
                 aim,
-                0,
+                actionQueue.getCurrentTeam().isPlayer() ? 0.0f : 1.0f,
                 0.10f
         );
         component.next = new InterpolationPositionComponent(
@@ -397,6 +402,7 @@ public class GameLogicSystem extends EntitySystem {
                     manager.removeEntity(target);
                 }
                 manager.resume(FieldHighlightRenderSystem.class);
+                manager.resume(AISystem.class);
             }
         };
         source.add(component);
