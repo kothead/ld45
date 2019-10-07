@@ -11,6 +11,7 @@ public class SpawnerComponent implements Component {
     public int limit;
     public int healthBuff = 0;
     public int damageBuff = 0;
+    public int spawnBuff = 0;
     public int spawned = 0;
 
     private Spawner spawner;
@@ -25,9 +26,11 @@ public class SpawnerComponent implements Component {
         Entity entity = spawner.spawn(x, y);
         if (HealthComponent.mapper.has(entity)) {
             HealthComponent.mapper.get(entity).health += healthBuff;
+            HealthComponent.mapper.get(entity).buff = healthBuff;
         }
         if (DamageComponent.mapper.has(entity)) {
             DamageComponent.mapper.get(entity).damage += damageBuff;
+            DamageComponent.mapper.get(entity).buff = damageBuff;
         }
         return entity;
     }

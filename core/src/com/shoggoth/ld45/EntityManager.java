@@ -13,6 +13,7 @@ import com.kothead.gdxjam.base.component.PositionComponent;
 import com.kothead.gdxjam.base.component.SpriteComponent;
 import com.kothead.gdxjam.base.system.RenderSystem;
 import com.kothead.gdxjam.base.util.Direction;
+import com.kothead.gdxjam.base.util.Utils;
 import com.shoggoth.ld45.component.*;
 import com.shoggoth.ld45.screen.GameScreen;
 import com.shoggoth.ld45.system.*;
@@ -66,6 +67,7 @@ public class EntityManager {
         engine.addSystem(selectionInputSystem);
 
         engine.addSystem(new BackgroundRenderSystem(priority++, screen, renderConfig));
+        engine.addSystem(new SpriteUpdaterSystem(priority++));
         engine.addSystem(new RenderSystem(priority++, screen.batch()));
         engine.addSystem(new FieldHighlightRenderSystem(priority++, screen, renderConfig));
         engine.addSystem(new GameLogicSystem(priority++, screen, this, renderConfig, teams));
@@ -147,15 +149,18 @@ public class EntityManager {
         entity.add(new HealthComponent(5));
         entity.add(new DamageComponent(4));
         CardSprite sprite = (CardSprite) SpriteComponent.mapper.get(entity).sprite;
-        sprite.setBackgroundCosmetics(new ArrayList<AssetDescriptor<TextureRegion>>() {{
-            add(Assets.images.RIVER);
-            add(Assets.images.GROUND);
-//            add(Assets.images.PRESENCE);
-        }});
         sprite.setBase(Assets.images.SKELETON);
-        sprite.setCosmetics(new ArrayList<AssetDescriptor<TextureRegion>>() {{
-                add(Assets.images.COSMETIC);
-            }});
+        sprite.setCosmetic(Utils.choose(
+                Assets.images.SKELETONFURIOUS,
+                Assets.images.SKELETONHOLY,
+                Assets.images.SKELETONMIGHTY,
+                Assets.images.SKELETONOVERLOAD,
+                Assets.images.SKELETONREAPING,
+                Assets.images.SKELETONSLASH,
+                Assets.images.SKELETONTERRY,
+                Assets.images.SKELETONTHORNY,
+                Assets.images.SKELETONVAMP
+        ));
         engine.addEntity(entity);
         return entity;
     }
@@ -166,15 +171,18 @@ public class EntityManager {
         entity.add(new HealthComponent(10));
         entity.add(new DamageComponent(5));
         CardSprite sprite = (CardSprite) SpriteComponent.mapper.get(entity).sprite;
-        sprite.setBackgroundCosmetics(new ArrayList<AssetDescriptor<TextureRegion>>() {{
-            add(Assets.images.RIVER2);
-            add(Assets.images.GROUND2);
-            add(Assets.images.PRESENCE2);
-        }});
         sprite.setBase(Assets.images.ZOMBIE);
-//        sprite.setCosmetics(new ArrayList<AssetDescriptor<TextureRegion>>() {{
-//            add(Assets.images.COSMETIC);
-//        }});
+        sprite.setCosmetic(Utils.choose(
+                Assets.images.ZAMBFURIOUS,
+                Assets.images.ZAMBHOLY,
+                Assets.images.ZAMBMIGHTY,
+                Assets.images.ZAMBOVERLOAD,
+                Assets.images.ZAMBREAPING,
+                Assets.images.ZAMBSLASH,
+                Assets.images.ZAMBTERRY,
+                Assets.images.ZAMBTHORNY,
+                Assets.images.ZAMBVAMP
+        ));
         engine.addEntity(entity);
         return entity;
     }
@@ -191,9 +199,17 @@ public class EntityManager {
             add(Assets.images.PRESENCE);
         }});
         sprite.setBase(Assets.images.DEMON);
-        sprite.setCosmetics(new ArrayList<AssetDescriptor<TextureRegion>>() {{
-            add(Assets.images.COSMETIC);
-        }});
+        sprite.setCosmetic(Utils.choose(
+                Assets.images.DEVILFURIOUS,
+                Assets.images.DEVILHOLY,
+                Assets.images.DEVILMIGHTY,
+                Assets.images.DEVILOVERLOAD,
+                Assets.images.DEVILREAPING,
+                Assets.images.DEVILSLASH,
+                Assets.images.DEVILTERRY,
+                Assets.images.DEVILTHORNY,
+                Assets.images.DEVILVAMP
+        ));
         engine.addEntity(entity);
         return entity;
     }
@@ -425,6 +441,37 @@ public class EntityManager {
 
                         case GROUND:
                             spawner.spawnCount += delta;
+                            spawner.spawnBuff += delta;
+                            break;
+
+                        case PRESENCE:
+                            spawner.damageBuff += delta;
+                            break;
+                    }
+                }
+            }
+        } else if (SpawnerComponent.mapper.has(card)) {
+            SpawnerComponent spawner = SpawnerComponent.mapper.get(card);
+            Entity[][] cells = screen.getField();
+            for (Direction direction: BUFF_DIRECTIONS) {
+                int x = CellComponent.mapper.get(cell).getX() + direction.getDx();
+                int y = CellComponent.mapper.get(cell).getY() + direction.getDy();
+
+                if (x >= 0 && x < renderConfig.getFieldWidth()
+                        && y >= 0 && y < renderConfig.getFieldHeight()
+                        && AttachComponent.mapper.has(cells[y][x])) {
+                    Entity adjacentCard = AttachComponent.mapper.get(cells[y][x]).entity;
+                    ResourceComponent resource = ResourceComponent.mapper.get(adjacentCard);
+                    if (resource == null) continue;
+
+                    switch (resource.resourceType) {
+                        case RIVER:
+                            spawner.healthBuff += delta;
+                            break;
+
+                        case GROUND:
+                            spawner.spawnCount += delta;
+                            spawner.spawnBuff += delta;
                             break;
 
                         case PRESENCE:

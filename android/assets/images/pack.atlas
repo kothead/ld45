@@ -6,153 +6,210 @@ filter: Nearest,Nearest
 repeat: none
 abyss
   rotate: false
-  xy: 2, 109
+  xy: 2, 802
   size: 140, 196
   orig: 140, 196
   offset: 0, 0
   index: -1
 background
   rotate: false
-  xy: 662, 802
+  xy: 146, 802
   size: 140, 196
   orig: 140, 196
   offset: 0, 0
   index: -1
 bloodriver
   rotate: false
-  xy: 146, 109
+  xy: 290, 802
   size: 140, 196
   orig: 140, 196
   offset: 0, 0
   index: -1
 border
   rotate: false
-  xy: 662, 602
+  xy: 434, 802
   size: 140, 196
   orig: 140, 196
   offset: 0, 0
   index: -1
 borderenemy
   rotate: false
-  xy: 806, 802
+  xy: 578, 802
   size: 140, 196
   orig: 140, 196
   offset: 0, 0
   index: -1
 cemetery
   rotate: false
-  xy: 290, 109
-  size: 140, 196
-  orig: 140, 196
-  offset: 0, 0
-  index: -1
-cosmetic
-  rotate: false
-  xy: 662, 402
+  xy: 722, 802
   size: 140, 196
   orig: 140, 196
   offset: 0, 0
   index: -1
 crypt
   rotate: false
-  xy: 806, 602
+  xy: 866, 802
   size: 140, 196
   orig: 140, 196
   offset: 0, 0
   index: -1
 cursedground
   rotate: false
-  xy: 434, 109
+  xy: 2, 602
+  size: 140, 196
+  orig: 140, 196
+  offset: 0, 0
+  index: -1
+damaged1
+  rotate: false
+  xy: 146, 602
+  size: 140, 196
+  orig: 140, 196
+  offset: 0, 0
+  index: -1
+damaged2
+  rotate: false
+  xy: 290, 602
   size: 140, 196
   orig: 140, 196
   offset: 0, 0
   index: -1
 demon
   rotate: false
-  xy: 806, 402
+  xy: 434, 602
   size: 140, 196
   orig: 140, 196
   offset: 0, 0
   index: -1
 demonic
   rotate: false
-  xy: 578, 109
+  xy: 578, 602
   size: 140, 196
   orig: 140, 196
   offset: 0, 0
   index: -1
-desktile
+devilfurious
   rotate: false
-  xy: 2, 309
-  size: 656, 689
-  orig: 656, 689
+  xy: 722, 602
+  size: 140, 196
+  orig: 140, 196
+  offset: 0, 0
+  index: -1
+devilholy
+  rotate: false
+  xy: 866, 602
+  size: 140, 196
+  orig: 140, 196
+  offset: 0, 0
+  index: -1
+devilmighty
+  rotate: false
+  xy: 2, 402
+  size: 140, 196
+  orig: 140, 196
+  offset: 0, 0
+  index: -1
+deviloverload
+  rotate: false
+  xy: 146, 402
+  size: 140, 196
+  orig: 140, 196
+  offset: 0, 0
+  index: -1
+devilreaping
+  rotate: false
+  xy: 290, 402
+  size: 140, 196
+  orig: 140, 196
+  offset: 0, 0
+  index: -1
+devilslash
+  rotate: false
+  xy: 434, 402
+  size: 140, 196
+  orig: 140, 196
+  offset: 0, 0
+  index: -1
+devilterry
+  rotate: false
+  xy: 578, 402
+  size: 140, 196
+  orig: 140, 196
+  offset: 0, 0
+  index: -1
+devilthorny
+  rotate: false
+  xy: 722, 402
+  size: 140, 196
+  orig: 140, 196
+  offset: 0, 0
+  index: -1
+devilvamp
+  rotate: false
+  xy: 866, 402
+  size: 140, 196
+  orig: 140, 196
   offset: 0, 0
   index: -1
 ground
-  rotate: false
-  xy: 722, 202
-  size: 140, 196
-  orig: 140, 196
-  offset: 0, 0
-  index: -1
-ground2
-  rotate: false
-  xy: 866, 202
-  size: 140, 196
-  orig: 140, 196
-  offset: 0, 0
-  index: -1
-ground3
-  rotate: false
-  xy: 722, 2
-  size: 140, 196
-  orig: 140, 196
-  offset: 0, 0
-  index: -1
-nothing
-  rotate: false
-  xy: 866, 2
-  size: 140, 196
-  orig: 140, 196
-  offset: 0, 0
-  index: -1
-
-pack2.png
-size: 1024,512
-format: RGBA8888
-filter: Nearest,Nearest
-repeat: none
-presence
   rotate: false
   xy: 2, 202
   size: 140, 196
   orig: 140, 196
   offset: 0, 0
   index: -1
-presence2
-  rotate: false
-  xy: 2, 2
-  size: 140, 196
-  orig: 140, 196
-  offset: 0, 0
-  index: -1
-presence3
+ground2
   rotate: false
   xy: 146, 202
   size: 140, 196
   orig: 140, 196
   offset: 0, 0
   index: -1
+ground3
+  rotate: false
+  xy: 290, 202
+  size: 140, 196
+  orig: 140, 196
+  offset: 0, 0
+  index: -1
+nothing
+  rotate: false
+  xy: 434, 202
+  size: 140, 196
+  orig: 140, 196
+  offset: 0, 0
+  index: -1
+presence
+  rotate: false
+  xy: 578, 202
+  size: 140, 196
+  orig: 140, 196
+  offset: 0, 0
+  index: -1
+presence2
+  rotate: false
+  xy: 722, 202
+  size: 140, 196
+  orig: 140, 196
+  offset: 0, 0
+  index: -1
+presence3
+  rotate: false
+  xy: 866, 202
+  size: 140, 196
+  orig: 140, 196
+  offset: 0, 0
+  index: -1
 river
   rotate: false
-  xy: 146, 2
+  xy: 2, 2
   size: 140, 196
   orig: 140, 196
   offset: 0, 0
   index: -1
 river2
   rotate: false
-  xy: 290, 202
+  xy: 146, 2
   size: 140, 196
   orig: 140, 196
   offset: 0, 0
@@ -166,21 +223,166 @@ river3
   index: -1
 selector
   rotate: false
-  xy: 434, 202
+  xy: 434, 2
   size: 140, 196
   orig: 140, 196
   offset: 0, 0
   index: -1
 skeleton
   rotate: false
-  xy: 434, 2
+  xy: 578, 2
+  size: 140, 196
+  orig: 140, 196
+  offset: 0, 0
+  index: -1
+skeletonfurious
+  rotate: false
+  xy: 722, 2
+  size: 140, 196
+  orig: 140, 196
+  offset: 0, 0
+  index: -1
+skeletonholy
+  rotate: false
+  xy: 866, 2
+  size: 140, 196
+  orig: 140, 196
+  offset: 0, 0
+  index: -1
+
+pack2.png
+size: 1024,1024
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+desktile
+  rotate: false
+  xy: 2, 309
+  size: 656, 689
+  orig: 656, 689
+  offset: 0, 0
+  index: -1
+skeletonmighty
+  rotate: false
+  xy: 2, 109
+  size: 140, 196
+  orig: 140, 196
+  offset: 0, 0
+  index: -1
+skeletonoverload
+  rotate: false
+  xy: 662, 802
+  size: 140, 196
+  orig: 140, 196
+  offset: 0, 0
+  index: -1
+skeletonreaping
+  rotate: false
+  xy: 146, 109
+  size: 140, 196
+  orig: 140, 196
+  offset: 0, 0
+  index: -1
+skeletonslash
+  rotate: false
+  xy: 662, 602
+  size: 140, 196
+  orig: 140, 196
+  offset: 0, 0
+  index: -1
+skeletonterry
+  rotate: false
+  xy: 806, 802
+  size: 140, 196
+  orig: 140, 196
+  offset: 0, 0
+  index: -1
+skeletonthorny
+  rotate: false
+  xy: 290, 109
+  size: 140, 196
+  orig: 140, 196
+  offset: 0, 0
+  index: -1
+skeletonvamp
+  rotate: false
+  xy: 662, 402
+  size: 140, 196
+  orig: 140, 196
+  offset: 0, 0
+  index: -1
+zambfurious
+  rotate: false
+  xy: 806, 602
+  size: 140, 196
+  orig: 140, 196
+  offset: 0, 0
+  index: -1
+zambholy
+  rotate: false
+  xy: 434, 109
+  size: 140, 196
+  orig: 140, 196
+  offset: 0, 0
+  index: -1
+zambmighty
+  rotate: false
+  xy: 806, 402
+  size: 140, 196
+  orig: 140, 196
+  offset: 0, 0
+  index: -1
+zamboverload
+  rotate: false
+  xy: 578, 109
+  size: 140, 196
+  orig: 140, 196
+  offset: 0, 0
+  index: -1
+zambreaping
+  rotate: false
+  xy: 722, 202
+  size: 140, 196
+  orig: 140, 196
+  offset: 0, 0
+  index: -1
+zambslash
+  rotate: false
+  xy: 866, 202
+  size: 140, 196
+  orig: 140, 196
+  offset: 0, 0
+  index: -1
+zambterry
+  rotate: false
+  xy: 722, 2
+  size: 140, 196
+  orig: 140, 196
+  offset: 0, 0
+  index: -1
+zambthorny
+  rotate: false
+  xy: 866, 2
+  size: 140, 196
+  orig: 140, 196
+  offset: 0, 0
+  index: -1
+
+pack3.png
+size: 512,256
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+zambvamp
+  rotate: false
+  xy: 2, 2
   size: 140, 196
   orig: 140, 196
   offset: 0, 0
   index: -1
 zombie
   rotate: false
-  xy: 578, 202
+  xy: 146, 2
   size: 140, 196
   orig: 140, 196
   offset: 0, 0

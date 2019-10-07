@@ -15,7 +15,8 @@ public class CardSprite extends Sprite {
     private Sprite background;
     private List<Sprite> backgroundCosmetics;
     private Sprite base;
-    private List<Sprite> cosmetics;
+    private Sprite cosmetic;
+    private Sprite damage;
 
     public CardSprite(RenderConfig config) {
         super();
@@ -41,11 +42,12 @@ public class CardSprite extends Sprite {
         base = new Sprite(GdxJam.assets().get(asset));
     }
 
-    public void setCosmetics(List<AssetDescriptor<TextureRegion>> assets) {
-        cosmetics = new ArrayList<>();
-        for (AssetDescriptor<TextureRegion> asset : assets) {
-            cosmetics.add(new Sprite(GdxJam.assets().get(asset)));
-        }
+    public void setCosmetic(AssetDescriptor<TextureRegion> asset) {
+        cosmetic = new Sprite(GdxJam.assets().get(asset));
+    }
+
+    public void setDamage(AssetDescriptor<TextureRegion> asset) {
+        damage = asset == null ? null : new Sprite(GdxJam.assets().get(asset));
     }
 
     @Override
@@ -65,10 +67,11 @@ public class CardSprite extends Sprite {
         if (base != null) {
             base.setPosition(x, y);
         }
-        if (cosmetics != null) {
-            for (Sprite sprite : cosmetics) {
-                sprite.setPosition(x, y);
-            }
+        if (cosmetic != null) {
+            cosmetic.setPosition(x, y);
+        }
+        if (damage != null) {
+            damage.setPosition(x, y);
         }
     }
 
@@ -94,11 +97,13 @@ public class CardSprite extends Sprite {
             base.setOrigin(0, 0);
             base.setScale(scaleXY);
         }
-        if (cosmetics != null) {
-            for (Sprite sprite : cosmetics) {
-                sprite.setOrigin(0, 0);
-                sprite.setScale(scaleXY);
-            }
+        if (cosmetic != null) {
+            cosmetic.setOrigin(0, 0);
+            cosmetic.setScale(scaleXY);
+        }
+        if (damage != null) {
+            damage.setOrigin(0, 0);
+            damage.setScale(scaleXY);
         }
     }
 
@@ -115,13 +120,14 @@ public class CardSprite extends Sprite {
         if (base != null) {
             base.draw(batch);
         }
-        if (cosmetics != null) {
-            for (Sprite sprite : cosmetics) {
-                sprite.draw(batch);
-            }
+        if (cosmetic != null) {
+            cosmetic.draw(batch);
         }
         if (border != null) {
             border.draw(batch);
+        }
+        if (damage != null) {
+            damage.draw(batch);
         }
     }
 
