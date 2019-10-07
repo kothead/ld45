@@ -46,7 +46,10 @@ public class LD45 extends GdxJamGame {
 						Assets.images.DESKTILE,
 						Assets.images.BLOODRIVER,
 						Assets.images.CURSEDGROUND,
-						Assets.images.SELECTOR
+						Assets.images.SELECTOR,
+						Assets.images.DEMONIC,
+						Assets.sounds.CARD,
+						Assets.sounds.TAP
 				));
 	}
 

@@ -4,8 +4,10 @@ import com.badlogic.ashley.core.*;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector3;
+import com.kothead.gdxjam.base.GdxJam;
 import com.kothead.gdxjam.base.component.PositionComponent;
 import com.kothead.gdxjam.base.util.Direction;
+import com.shoggoth.ld45.Assets;
 import com.shoggoth.ld45.EntityManager;
 import com.shoggoth.ld45.component.*;
 import com.shoggoth.ld45.component.prefix.FuriousComponent;
@@ -284,6 +286,7 @@ public class GameLogicSystem extends EntitySystem {
     }
 
     private void move(final Entity card, final Entity cell) {
+        GdxJam.assets().get(Assets.sounds.CARD).play();
         manager.pause(FieldHighlightRenderSystem.class);
         setSelectable();
         clearSelection();
@@ -298,7 +301,7 @@ public class GameLogicSystem extends EntitySystem {
                 Interpolation.fastSlow,
                 origin,
                 PositionComponent.mapper.get(cell).position,
-                0.5f,
+                0,
                 0.3f
         );
         interpolationPosition.callback = new InterpolationPositionComponent.InterpolationCallback() {
@@ -336,7 +339,7 @@ public class GameLogicSystem extends EntitySystem {
                 Interpolation.fastSlow,
                 PositionComponent.mapper.get(card).position,
                 PositionComponent.mapper.get(spawned).position,
-                0.5f,
+                0,
                 1.0f
         );
         component.from.z = -1.0f;
@@ -375,7 +378,7 @@ public class GameLogicSystem extends EntitySystem {
                 Interpolation.slowFast,
                 origin,
                 aim,
-                0.5f,
+                0,
                 0.10f
         );
         component.next = new InterpolationPositionComponent(

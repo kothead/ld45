@@ -2,6 +2,7 @@ package com.shoggoth.ld45.screen;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.kothead.gdxjam.base.GdxJam;
 import com.kothead.gdxjam.base.GdxJamGame;
@@ -21,6 +22,7 @@ public class GameScreen extends BaseScreen {
 
     private ActionQueue actionQueue;
     private Entity[][] field;
+    private Music music;
 
     public GameScreen(GdxJamGame game, int fieldWidth, int fieldHeight) {
         super(game);
@@ -51,13 +53,17 @@ public class GameScreen extends BaseScreen {
             }
         }
 
-        manager.addNothing(0, 1, players.getId());
-        manager.addCrypt(0, 0, players.getId());
-        manager.addZombie(1, 2, players.getId()).add(new FuriousComponent(2));
+        manager.addNothing(4, 4, players.getId());
+        getCamera().position.x = renderConfig.getMaxWidth() / 2.0f;
+        getCamera().position.y = renderConfig.getMaxHeight() / 2.0f;
+        getCamera().update();
 
-        manager.addCemetery(5, 1, players.getId());
-        manager.addDemon(5, 2, players.getId());
-        manager.addSkeleton(4, 2, players.getId());
+        shapes().setProjectionMatrix(getCamera().combined);
+        batch().setProjectionMatrix(getCamera().combined);
+
+        music = Gdx.audio.newMusic(Gdx.files.internal("tracks/Ajoura - Ars Nova.mp3"));
+        music.setLooping(true);
+        music.play();
     }
 
     public void showCardSelection(Entity sourceCard, List<Entity> cards) {
@@ -82,6 +88,7 @@ public class GameScreen extends BaseScreen {
     public void dispose() {
         super.dispose();
         manager.dispose();
+        music.dispose();
     }
 
     public Entity[][] getField() {
@@ -98,8 +105,8 @@ public class GameScreen extends BaseScreen {
 
     public static final class Builder implements ScreenBuilder<GameScreen> {
 
-        private int fieldWidth = 10;
-        private int fieldHeight = 10;
+        private int fieldWidth = 9;
+        private int fieldHeight = 9;
 
         @Override
         public GameScreen build(GdxJamGame game) {

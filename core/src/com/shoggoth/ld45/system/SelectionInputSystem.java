@@ -13,8 +13,10 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.kothead.gdxjam.base.GdxJam;
 import com.kothead.gdxjam.base.component.PositionComponent;
 import com.kothead.gdxjam.base.component.SpriteComponent;
+import com.shoggoth.ld45.Assets;
 import com.shoggoth.ld45.component.CardComponent;
 import com.shoggoth.ld45.component.SelectableComponent;
 import com.shoggoth.ld45.component.SelectionSourceComponent;
@@ -57,6 +59,8 @@ public class SelectionInputSystem extends EntitySystem implements InputProcessor
         super.update(deltaTime);
 
         if (isClicked) {
+            GdxJam.assets().get(Assets.sounds.TAP).play();
+
             boolean selected = false;
             for (Entity entity: selectableCards) {
                 Vector3 position = PositionComponent.mapper.get(entity).position;

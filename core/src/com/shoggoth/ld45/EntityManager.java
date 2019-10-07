@@ -136,7 +136,7 @@ public class EntityManager {
 
     public Entity addSkeleton(int x, int y, int teamId) {
         Entity entity = addCard(x, y, teamId);
-        entity.add(new CreatureComponent());
+        entity.add(new CreatureComponent(CreatureComponent.CreatureType.SKELETON));
         entity.add(new HealthComponent(5));
         entity.add(new DamageComponent(4));
         CardSprite sprite = (CardSprite) SpriteComponent.mapper.get(entity).sprite;
@@ -155,7 +155,7 @@ public class EntityManager {
 
     public Entity addZombie(int x, int y, int teamId) {
         Entity entity = addCard(x, y, teamId);
-        entity.add(new CreatureComponent());
+        entity.add(new CreatureComponent(CreatureComponent.CreatureType.ZOMBIE));
         entity.add(new HealthComponent(10));
         entity.add(new DamageComponent(5));
         CardSprite sprite = (CardSprite) SpriteComponent.mapper.get(entity).sprite;
@@ -174,7 +174,7 @@ public class EntityManager {
 
     public Entity addDemon(int x, int y, int teamId) {
         Entity entity = addCard(x, y, teamId);
-        entity.add(new CreatureComponent());
+        entity.add(new CreatureComponent(CreatureComponent.CreatureType.DEMON));
         entity.add(new HealthComponent(6));
         entity.add(new DamageComponent(10));
         CardSprite sprite = (CardSprite) SpriteComponent.mapper.get(entity).sprite;
@@ -342,7 +342,7 @@ public class EntityManager {
         entity.add(new HealthComponent(1));
         entity.add(new ResourceComponent(ResourceComponent.ResourceType.PRESENCE));
         CardSprite sprite = (CardSprite) SpriteComponent.mapper.get(entity).sprite;
-        sprite.setBase(Assets.images.PRESENCE3);
+        sprite.setBase(Assets.images.DEMONIC);
         engine.addEntity(entity);
         return entity;
     }

@@ -10,6 +10,8 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.kothead.gdxjam.base.GdxJam;
+import com.shoggoth.ld45.Assets;
 import com.shoggoth.ld45.component.*;
 import com.shoggoth.ld45.component.prefix.FuriousComponent;
 import com.shoggoth.ld45.screen.GameScreen;
@@ -103,6 +105,8 @@ public class InputSystem extends EntitySystem implements InputProcessor {
         }
 
         if (isClicked) {
+            GdxJam.assets().get(Assets.sounds.TAP).play();
+
             Vector3 position = countPosition(lastLeftTouch.x, lastLeftTouch.y);
             if (position.x >= 0 && position.y >= 0) {
                 Entity entity = screen.getField()[(int) position.y][(int) position.x];
