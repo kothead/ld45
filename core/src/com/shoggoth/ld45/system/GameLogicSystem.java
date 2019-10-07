@@ -2,12 +2,14 @@ package com.shoggoth.ld45.system;
 
 import com.badlogic.ashley.core.*;
 import com.badlogic.ashley.utils.ImmutableArray;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector3;
 import com.kothead.gdxjam.base.component.PositionComponent;
 import com.kothead.gdxjam.base.util.Direction;
 import com.shoggoth.ld45.EntityManager;
 import com.shoggoth.ld45.component.*;
+import com.shoggoth.ld45.component.prefix.FuriousComponent;
 import com.shoggoth.ld45.screen.GameScreen;
 import com.shoggoth.ld45.util.ActionQueue;
 import com.shoggoth.ld45.util.RenderConfig;
@@ -87,6 +89,7 @@ public class GameLogicSystem extends EntitySystem {
                         spawn(sourceCard, target);
                     } else if (CreatureComponent.mapper.has(sourceCard)) {
                         move(sourceCard, target);
+                        source = target;
                     }
                 } else {
                     // TODO: process saint
@@ -112,9 +115,8 @@ public class GameLogicSystem extends EntitySystem {
                                     ResourceComponent.mapper
                             ),
                             Arrays.asList(source)
-                    )).size() == 0 && pendingAction) {
-                        pendingAction = false;
-                        actionQueue.nextAction();
+                    )).size() == 1 && pendingAction) {
+                        stopPendingAction();
                     }
                 } else if (isTeammateCreature(sourceCard)) {
                     if (setSelectable(combine(
@@ -125,23 +127,26 @@ public class GameLogicSystem extends EntitySystem {
                                     ResourceComponent.mapper
                             ),
                             Arrays.asList(source)
-                    )).size() == 0 && pendingAction) {
-                        pendingAction = false;
-                        actionQueue.nextAction();
+                    )).size() == 1 && pendingAction) {
+                        stopPendingAction();
                     }
                 }
             }
         } else {
-            if (pendingAction) {
-                pendingAction = false;
-                actionQueue.nextAction();
-            }
-            setSelectable(combine(
+            if (setSelectable(combine(
                     getCellsOfTeammate(nothings),
                     getCellsOfTeammate(spawners),
                     getCellsOfTeammate(creatures)
-            ));
+            )).size() == 0) {
+                stopPendingAction();
+            };
         }
+    }
+
+    private void stopPendingAction() {
+        pendingAction = false;
+        actionQueue.nextAction();
+        clearSelection();
     }
 
     private List<Entity> getCellsOf(Iterable<Entity> entities) {
@@ -261,7 +266,8 @@ public class GameLogicSystem extends EntitySystem {
 
         boolean hasResource = false;
         for (Entity entity: adjacent(cell, BUFF_DIRECTIONS)) {
-            if (ResourceComponent.mapper.has(entity)) {
+            if (AttachComponent.mapper.has(entity)
+                    && ResourceComponent.mapper.has(AttachComponent.mapper.get(entity).entity)) {
                 hasResource = true;
                 break;
             }
@@ -272,11 +278,11 @@ public class GameLogicSystem extends EntitySystem {
         cards.add(manager.addBloodRiver(teamId));
         cards.add(manager.addCursedGround(teamId));
         cards.add(manager.addDemonicPresence(teamId));
-//        if (hasResource) {
+        if (hasResource) {
             cards.add(manager.addAbyss(teamId));
             cards.add(manager.addCemetery(teamId));
             cards.add(manager.addCrypt(teamId));
-//        }
+        }
         screen.showCardSelection(card, cards);
     }
 
@@ -301,6 +307,17 @@ public class GameLogicSystem extends EntitySystem {
             }
         };
         card.add(interpolationPosition);
+
+        FuriousComponent furious = FuriousComponent.mapper.get(card);
+        if (furious != null) {
+            furious.done++;
+        }
+        if (furious != null && furious.done < furious.count) {
+            pendingAction = true;
+            cell.add(new SelectionSourceComponent());
+        } else {
+            if (furious != null) furious.done = 0;
+        }
     }
 
     private void spawn(Entity card, Entity cell) {
@@ -339,7 +356,8 @@ public class GameLogicSystem extends EntitySystem {
 
     private void attack(final Entity source, final Entity target) {
         setSelectable();
-        clearSelection();
+        Entity cell = AttachComponent.mapper.get(target).entity;
+        cell.remove(SelectionTargetComponent.class);
 
         Vector3 origin = new Vector3(PositionComponent.mapper.get(source).position);
 
@@ -373,6 +391,17 @@ public class GameLogicSystem extends EntitySystem {
             }
         };
         source.add(component);
+
+        FuriousComponent furious = FuriousComponent.mapper.get(source);
+        if (furious != null) {
+            furious.done++;
+        }
+        if (furious != null && furious.done < furious.count) {
+            pendingAction = true;
+        } else {
+            if (furious != null) furious.done = 0;
+            clearSelection();
+        }
     }
 
 //    public void checkFor(Direction[] directions, ComponentMapper... mappers) {

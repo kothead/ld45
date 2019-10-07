@@ -10,9 +10,8 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.shoggoth.ld45.component.SelectableComponent;
-import com.shoggoth.ld45.component.SelectionSourceComponent;
-import com.shoggoth.ld45.component.SelectionTargetComponent;
+import com.shoggoth.ld45.component.*;
+import com.shoggoth.ld45.component.prefix.FuriousComponent;
 import com.shoggoth.ld45.screen.GameScreen;
 import com.shoggoth.ld45.util.RenderConfig;
 
@@ -110,6 +109,8 @@ public class InputSystem extends EntitySystem implements InputProcessor {
                 if (entity != null && SelectableComponent.mapper.has(entity)) {
                     if (SelectionSourceComponent.mapper.has(entity)) {
                         entity.remove(SelectionSourceComponent.class);
+
+                        resetCardForCell(entity);
                     } else if (hasSelectionSource()) {
                         entity.add(new SelectionTargetComponent());
                     } else {
@@ -118,6 +119,18 @@ public class InputSystem extends EntitySystem implements InputProcessor {
                 }
             }
             isClicked = false;
+        }
+    }
+
+    private void resetCardForCell(Entity cell) {
+        if (!AttachComponent.mapper.has(cell)) return;
+
+        Entity card = AttachComponent.mapper.get(cell).entity;
+        if (SpawnerComponent.mapper.has(card)) {
+            SpawnerComponent.mapper.get(card).spawned = 0;
+        }
+        if (FuriousComponent.mapper.has(card)) {
+            FuriousComponent.mapper.get((card)).done = 0;
         }
     }
 

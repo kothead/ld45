@@ -8,6 +8,7 @@ import com.kothead.gdxjam.base.GdxJamGame;
 import com.kothead.gdxjam.base.screen.BaseScreen;
 import com.kothead.gdxjam.base.screen.ScreenBuilder;
 import com.shoggoth.ld45.EntityManager;
+import com.shoggoth.ld45.component.prefix.FuriousComponent;
 import com.shoggoth.ld45.util.*;
 
 import java.util.List;
@@ -52,7 +53,7 @@ public class GameScreen extends BaseScreen {
 
         manager.addNothing(0, 1, players.getId());
         manager.addCrypt(0, 0, players.getId());
-        manager.addZombie(1, 2, players.getId());
+        manager.addZombie(1, 2, players.getId()).add(new FuriousComponent(2));
 
         manager.addCemetery(5, 1, players.getId());
         manager.addDemon(5, 2, players.getId());

@@ -72,7 +72,7 @@ public class EntityManager {
     public void removeEntity(Entity entity) {
         if (AttachComponent.mapper.has(entity)) {
             Entity cell = AttachComponent.mapper.get(entity).entity;
-            AttachComponent.mapper.get(cell).entity = null;
+            cell.remove(AttachComponent.class);
         }
         engine.removeEntity(entity);
     }
@@ -297,6 +297,7 @@ public class EntityManager {
 
     private Entity addBloodRiver(Entity entity) {
         entity.add(new HealthComponent(1));
+        entity.add(new ResourceComponent());
         CardSprite sprite = new CardSprite(renderConfig);
         sprite.setBorder(Assets.images.BORDER);
         sprite.setBackground(Assets.images.BACKGROUND);
@@ -318,6 +319,7 @@ public class EntityManager {
 
     private Entity addCursedGround(Entity entity) {
         entity.add(new HealthComponent(1));
+        entity.add(new ResourceComponent());
         CardSprite sprite = new CardSprite(renderConfig);
         sprite.setBorder(Assets.images.BORDER);
         sprite.setBackground(Assets.images.BACKGROUND);
@@ -339,6 +341,7 @@ public class EntityManager {
 
     private Entity addDemonicPresence(Entity entity) {
         entity.add(new HealthComponent(1));
+        entity.add(new ResourceComponent());
         CardSprite sprite = new CardSprite(renderConfig);
         sprite.setBorder(Assets.images.BORDER);
         sprite.setBackground(Assets.images.BACKGROUND);
