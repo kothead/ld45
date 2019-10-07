@@ -167,7 +167,6 @@ public class CardSelector {
                 Vector3 oldNothingPosition = PositionComponent.mapper.get(sourceCard).position;
 
                 manager.attach(cell, card);
-                manager.checkForNothing();
 
                 InterpolationPositionComponent interpolationPosition = new InterpolationPositionComponent(
                         Interpolation.smoother,

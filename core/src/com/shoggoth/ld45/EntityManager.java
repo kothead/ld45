@@ -3,6 +3,7 @@ package com.shoggoth.ld45;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -389,15 +390,17 @@ public class EntityManager {
         card.add(new AttachComponent(cell));
 
         buffAround(cell, card, 1);
+        checkForNothing();
     }
 
     public void detach(Entity card) {
         if (AttachComponent.mapper.has(card)) {
             Entity cell = AttachComponent.mapper.get(card).entity;
-            buffAround(cell, card, -1);
-
             cell.remove(AttachComponent.class);
             card.remove(AttachComponent.class);
+
+            buffAround(cell, card, -1);
+            checkForNothing();
         }
     }
 
@@ -452,7 +455,11 @@ public class EntityManager {
         Entity[][] entities = screen.getField();
         for (int i = 0; i < renderConfig.getFieldHeight(); i++) {
             for (int j = 0; j < renderConfig.getFieldWidth(); j++) {
-                if (AttachComponent.mapper.has(entities[i][j])) continue;
+                AttachComponent attach = AttachComponent.mapper.get(entities[i][j]);
+                boolean needToCheck = attach != null && NothingComponent.mapper.has(attach.entity);
+                if (!needToCheck && attach != null) continue;
+
+                boolean checked = false;
 
                 for (Direction direction: NOTHING_SPAWN_DIRECTIONS) {
                     int x = j + direction.getDx();
@@ -463,10 +470,19 @@ public class EntityManager {
                             && AttachComponent.mapper.has(entities[y][x])) {
                         Entity card = AttachComponent.mapper.get(entities[y][x]).entity;
                         if (ResourceComponent.mapper.has(card) || SpawnerComponent.mapper.has(card)) {
-                            addNothing(j, i, TeamComponent.mapper.get(card).id);
+                            if (needToCheck) {
+                                checked = true;
+                            } else {
+                                addNothing(j, i, TeamComponent.mapper.get(card).id);
+                            }
                             break;
                         }
                     }
+                }
+
+                if (needToCheck && !checked) {
+                    detachOldNothing(entities[i][j]);
+                    engine.removeEntity(attach.entity);
                 }
             }
         }

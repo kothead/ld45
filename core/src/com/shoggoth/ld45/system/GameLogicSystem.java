@@ -99,8 +99,6 @@ public class GameLogicSystem extends EntitySystem {
                     attack(sourceCard, targetCard);
                 }
 
-                manager.checkForNothing();
-
                 if (!SelectionSourceComponent.mapper.has(source)) {
                     Gdx.app.log("Test", "Lost selection source component");
                     actionQueue.nextAction();
