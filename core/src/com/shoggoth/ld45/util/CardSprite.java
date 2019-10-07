@@ -17,8 +17,9 @@ public class CardSprite extends Sprite {
     private Sprite base;
     private List<Sprite> cosmetics;
 
-    public CardSprite() {
+    public CardSprite(RenderConfig config) {
         super();
+        setSize(config.getCardWidth(), config.getCardHeight());
     }
 
     public void setBorder(AssetDescriptor<TextureRegion> asset) {
@@ -72,6 +73,36 @@ public class CardSprite extends Sprite {
     }
 
     @Override
+    public void setScale(float scaleXY) {
+        super.setOrigin(0, 0);
+        super.setScale(scaleXY);
+        if (border != null) {
+            border.setOrigin(0, 0);
+            border.setScale(scaleXY);
+        }
+        if (background != null) {
+            background.setOrigin(0, 0);
+            background.setScale(scaleXY);
+        }
+        if (backgroundCosmetics != null) {
+            for (Sprite sprite : backgroundCosmetics) {
+                sprite.setOrigin(0, 0);
+                sprite.setScale(scaleXY);
+            }
+        }
+        if (base != null) {
+            base.setOrigin(0, 0);
+            base.setScale(scaleXY);
+        }
+        if (cosmetics != null) {
+            for (Sprite sprite : cosmetics) {
+                sprite.setOrigin(0, 0);
+                sprite.setScale(scaleXY);
+            }
+        }
+    }
+
+    @Override
     public void draw(Batch batch) {
         if (background != null) {
             background.draw(batch);
@@ -92,5 +123,15 @@ public class CardSprite extends Sprite {
         if (border != null) {
             border.draw(batch);
         }
+    }
+
+    @Override
+    public float getWidth() {
+        return super.getWidth() * getScaleX();
+    }
+
+    @Override
+    public float getHeight() {
+        return super.getHeight() * getScaleY();
     }
 }

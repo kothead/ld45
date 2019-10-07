@@ -31,6 +31,8 @@ public class GameLogicSystem extends EntitySystem {
             Direction.RIGHT
     };
 
+    public static Direction[] BUFF_DIRECTIONS = Direction.getDirections();
+
     private ImmutableArray<Entity> cells;
     private ImmutableArray<Entity> spawners;
     private ImmutableArray<Entity> creatures;
@@ -95,7 +97,7 @@ public class GameLogicSystem extends EntitySystem {
                 actionQueue.nextAction();
             } else {
                 if (NothingComponent.mapper.has(sourceCard)) {
-                    showAvailableBuildings();
+                    showCardSelector(source, sourceCard);
                     setSelectable(source);
                 } else if (SpawnerComponent.mapper.has(sourceCard)) {
                     setSelectable(combine(
@@ -237,8 +239,29 @@ public class GameLogicSystem extends EntitySystem {
         }
     }
 
-    private void showAvailableBuildings() {
-        // TODO: show popup with available buildings
+    private void showCardSelector(Entity cell, Entity card) {
+        setSelectable();
+        clearSelection();
+
+        boolean hasResource = false;
+        for (Entity entity: adjacent(cell, BUFF_DIRECTIONS)) {
+            if (ResourceComponent.mapper.has(entity)) {
+                hasResource = true;
+                break;
+            }
+        }
+
+        int teamId = actionQueue.getCurrentTeamId();
+        List<Entity> cards = new ArrayList<>();
+        cards.add(manager.addBloodRiver(teamId));
+        cards.add(manager.addCursedGround(teamId));
+        cards.add(manager.addDemonicPresence(teamId));
+//        if (hasResource) {
+            cards.add(manager.addAbyss(teamId));
+            cards.add(manager.addCemetery(teamId));
+            cards.add(manager.addCrypt(teamId));
+//        }
+        screen.showCardSelection(card, cards);
     }
 
     private void move(Entity card, Entity cell) {

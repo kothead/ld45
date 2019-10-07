@@ -8,15 +8,15 @@ import com.kothead.gdxjam.base.GdxJamGame;
 import com.kothead.gdxjam.base.screen.BaseScreen;
 import com.kothead.gdxjam.base.screen.ScreenBuilder;
 import com.shoggoth.ld45.EntityManager;
-import com.shoggoth.ld45.util.AITeam;
-import com.shoggoth.ld45.util.ActionQueue;
-import com.shoggoth.ld45.util.RenderConfig;
-import com.shoggoth.ld45.util.Team;
+import com.shoggoth.ld45.util.*;
+
+import java.util.List;
 
 public class GameScreen extends BaseScreen {
 
     private EntityManager manager;
     private RenderConfig renderConfig = new RenderConfig();
+    private CardSelector selector;
 
     private ActionQueue actionQueue;
     private Entity[][] field;
@@ -57,6 +57,16 @@ public class GameScreen extends BaseScreen {
         manager.addCemetery(5, 1, players.getId());
         manager.addDemon(5, 2, players.getId());
         manager.addSkeleton(4, 2, players.getId());
+    }
+
+    public void showCardSelection(Entity sourceCard, List<Entity> cards) {
+        selector = new CardSelector(this, GdxJam.engine(), renderConfig, sourceCard, cards);
+        selector.animateMoveOut();
+    }
+
+    public void selectCard(Entity card) {
+        selector.animateSelected(card);
+        selector = null;
     }
 
     @Override

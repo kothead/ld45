@@ -34,10 +34,15 @@ public class EntityManager {
     public void registerSystems() {
         int priority = 0;
         engine.addSystem(new InterpolationPositionSystem(priority++));
-        engine.addSystem(new InterpolationOpacitySystem(priority++));
+        engine.addSystem(new InterpolationTintSystem(priority++));
         engine.addSystem(new InterpolationScaleSystem(priority++));
         engine.addSystem(new AISystem(priority++, screen, renderConfig));
         engine.addSystem(new InputSystem(priority++, screen, renderConfig));
+
+        SelectionInputSystem system = new SelectionInputSystem(priority++, screen, renderConfig);
+        system.setProcessing(false);
+        engine.addSystem(system);
+
         engine.addSystem(new BackgroundRenderSystem(priority++, screen, renderConfig));
         engine.addSystem(new RenderSystem(priority++, screen.batch()));
         engine.addSystem(new FieldHighlightRenderSystem(priority++, screen.shapes(), renderConfig));
@@ -74,13 +79,14 @@ public class EntityManager {
         Entity entity = new Entity();
         entity.add(new CardComponent());
         entity.add(new TeamComponent(teamId));
+        entity.add(new PositionComponent(0, 0, 0));
         return entity;
     }
 
     public Entity addSkeleton(int x, int y, int teamId) {
         Entity entity = addCard(x, y, teamId);
         entity.add(new CreatureComponent());
-        CardSprite sprite = new CardSprite();
+        CardSprite sprite = new CardSprite(renderConfig);
         sprite.setBorder(Assets.images.BORDER);
         sprite.setBackground(Assets.images.BACKGROUND);
         sprite.setBackgroundCosmetics(new ArrayList<AssetDescriptor<TextureRegion>>() {{
@@ -100,7 +106,7 @@ public class EntityManager {
     public Entity addZombie(int x, int y, int teamId) {
         Entity entity = addCard(x, y, teamId);
         entity.add(new CreatureComponent());
-        CardSprite sprite = new CardSprite();
+        CardSprite sprite = new CardSprite(renderConfig);
         sprite.setBorder(Assets.images.BORDER);
         sprite.setBackground(Assets.images.BACKGROUND);
         sprite.setBackgroundCosmetics(new ArrayList<AssetDescriptor<TextureRegion>>() {{
@@ -120,7 +126,7 @@ public class EntityManager {
     public Entity addDemon(int x, int y, int teamId) {
         Entity entity = addCard(x, y, teamId);
         entity.add(new CreatureComponent());
-        CardSprite sprite = new CardSprite();
+        CardSprite sprite = new CardSprite(renderConfig);
         sprite.setBorder(Assets.images.BORDER);
         sprite.setBackground(Assets.images.BACKGROUND);
         sprite.setBackgroundCosmetics(new ArrayList<AssetDescriptor<TextureRegion>>() {{
@@ -159,7 +165,7 @@ public class EntityManager {
             }
         }, 2, 4));
 
-        CardSprite sprite = new CardSprite();
+        CardSprite sprite = new CardSprite(renderConfig);
         sprite.setBorder(Assets.images.BORDER);
         sprite.setBackground(Assets.images.BACKGROUND);
         sprite.setBackgroundCosmetics(new ArrayList<AssetDescriptor<TextureRegion>>() {{
@@ -195,7 +201,7 @@ public class EntityManager {
             }
         }, 1, 2));
 
-        CardSprite sprite = new CardSprite();
+        CardSprite sprite = new CardSprite(renderConfig);
         sprite.setBorder(Assets.images.BORDER);
         sprite.setBackground(Assets.images.BACKGROUND);
         sprite.setBackgroundCosmetics(new ArrayList<AssetDescriptor<TextureRegion>>() {{
@@ -231,7 +237,7 @@ public class EntityManager {
             }
         }, 1, 3));
 
-        CardSprite sprite = new CardSprite();
+        CardSprite sprite = new CardSprite(renderConfig);
         sprite.setBorder(Assets.images.BORDER);
         sprite.setBackground(Assets.images.BACKGROUND);
         sprite.setBackgroundCosmetics(new ArrayList<AssetDescriptor<TextureRegion>>() {{
@@ -257,8 +263,9 @@ public class EntityManager {
 
     private Entity addBloodRiver(Entity entity) {
         entity.add(new HealthComponent(1));
-        CardSprite sprite = new CardSprite();
+        CardSprite sprite = new CardSprite(renderConfig);
         sprite.setBorder(Assets.images.BORDER);
+        sprite.setBackground(Assets.images.BACKGROUND);
         sprite.setBase(Assets.images.RIVER3);
         entity.add(new SpriteComponent(sprite));
         engine.addEntity(entity);
@@ -277,8 +284,9 @@ public class EntityManager {
 
     private Entity addCursedGround(Entity entity) {
         entity.add(new HealthComponent(1));
-        CardSprite sprite = new CardSprite();
+        CardSprite sprite = new CardSprite(renderConfig);
         sprite.setBorder(Assets.images.BORDER);
+        sprite.setBackground(Assets.images.BACKGROUND);
         sprite.setBase(Assets.images.GROUND3);
         entity.add(new SpriteComponent(sprite));
         engine.addEntity(entity);
@@ -297,8 +305,9 @@ public class EntityManager {
 
     private Entity addDemonicPresence(Entity entity) {
         entity.add(new HealthComponent(1));
-        CardSprite sprite = new CardSprite();
+        CardSprite sprite = new CardSprite(renderConfig);
         sprite.setBorder(Assets.images.BORDER);
+        sprite.setBackground(Assets.images.BACKGROUND);
         sprite.setBase(Assets.images.PRESENCE3);
         entity.add(new SpriteComponent(sprite));
         engine.addEntity(entity);
@@ -307,7 +316,7 @@ public class EntityManager {
 
     public Entity addNothing(int x, int y, int teamId) {
         Entity entity = addCard(x, y, teamId);
-        CardSprite sprite = new CardSprite();
+        CardSprite sprite = new CardSprite(renderConfig);
         sprite.setBorder(Assets.images.BORDER);
         sprite.setBackground(Assets.images.BACKGROUND);
         sprite.setBase(Assets.images.NOTHING);

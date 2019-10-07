@@ -19,16 +19,18 @@ import com.shoggoth.ld45.util.RenderConfig;
 public class InputSystem extends EntitySystem implements InputProcessor {
 
     private static final float CAMERA_SPEED = 400.0f;
-    private static final float MOVEMENT_MARGIN = 20;
+    private static final float MOVEMENT_MARGIN = -20;
 
     private GameScreen screen;
 
     private RenderConfig renderConfig;
     private Rectangle cameraLimits;
 
-    private Vector2 lastTouch = new Vector2();
+    private Vector2 lastLeftTouch = new Vector2();
+    private Vector2 lastRightTouch = new Vector2();
     private Vector2 delta = new Vector2(0, 0);
     private boolean isDragging = false;
+    private boolean isClicked = false;
 
     public InputSystem(int priority, GameScreen screen, RenderConfig renderConfig) {
         super(priority);
@@ -100,6 +102,23 @@ public class InputSystem extends EntitySystem implements InputProcessor {
             screen.shapes().setProjectionMatrix(screen.getCamera().combined);
             screen.batch().setProjectionMatrix(screen.getCamera().combined);
         }
+
+        if (isClicked) {
+            Vector3 position = countPosition(lastLeftTouch.x, lastLeftTouch.y);
+            if (position.x >= 0 && position.y >= 0) {
+                Entity entity = screen.getField()[(int) position.y][(int) position.x];
+                if (entity != null && SelectableComponent.mapper.has(entity)) {
+                    if (SelectionSourceComponent.mapper.has(entity)) {
+                        entity.remove(SelectionSourceComponent.class);
+                    } else if (hasSelectionSource()) {
+                        entity.add(new SelectionTargetComponent());
+                    } else {
+                        entity.add(new SelectionSourceComponent());
+                    }
+                }
+            }
+            isClicked = false;
+        }
     }
 
     @Override
@@ -119,28 +138,19 @@ public class InputSystem extends EntitySystem implements InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        if (!checkProcessing()) return false;
+
         if (button == Input.Buttons.LEFT) {
-            Vector3 position = countPosition(screenX, screenY);
-            if (position.x >= 0 && position.y >= 0) {
-                Entity entity = screen.getField()[(int) position.y][(int) position.x];
-                if (entity != null && SelectableComponent.mapper.has(entity)) {
-                    if (SelectionSourceComponent.mapper.has(entity)) {
-                        entity.remove(SelectionSourceComponent.class);
-                    } else if (hasSelectionSource()) {
-                        entity.add(new SelectionTargetComponent());
-                    } else {
-                        entity.add(new SelectionSourceComponent());
-                    }
-                }
-            }
+            isClicked = true;
+            lastLeftTouch.set(screenX, screenY);
         } else if (button == Input.Buttons.RIGHT) {
             isDragging = true;
-            lastTouch.set(screenX, screenY);
+            lastRightTouch.set(screenX, screenY);
         }
         return false;
     }
 
-    private Vector3 countPosition(int screenX, int screenY) {
+    private Vector3 countPosition(float screenX, float screenY) {
         Vector3 coordinates = new Vector3(screenX, screenY,0);
         Vector3 position = new Vector3(-1, -1,0);
         screen.getCamera().unproject(coordinates);
@@ -162,6 +172,8 @@ public class InputSystem extends EntitySystem implements InputProcessor {
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        if (!checkProcessing()) return false;
+
         if (button == Input.Buttons.RIGHT) {
             isDragging = false;
         }
@@ -170,13 +182,15 @@ public class InputSystem extends EntitySystem implements InputProcessor {
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
+        if (!checkProcessing()) return false;
+
         if (isDragging) {
             Vector2 newTouch = new Vector2(screenX, screenY);
             // delta will now hold the difference between the last and the current touch positions
             // delta.x > 0 means the touch moved to the right, delta.x < 0 means a move to the left
-            delta = newTouch.cpy().sub(lastTouch);
+            delta = newTouch.cpy().sub(lastRightTouch);
 
-            lastTouch = newTouch;
+            lastRightTouch = newTouch;
         }
         return false;
     }

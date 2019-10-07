@@ -25,6 +25,7 @@ public class InterpolationScaleSystem extends IteratingSystem {
         sprite.setScale(component.getInterpolatedValue());
 
         if (component.elapsed >= component.duration) {
+            sprite.setScale(component.to);
             entity.remove(InterpolationScaleComponent.class);
             if (component.next != null) {
                 entity.add(component.next);

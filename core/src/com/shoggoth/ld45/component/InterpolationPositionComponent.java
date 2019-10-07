@@ -2,6 +2,7 @@ package com.shoggoth.ld45.component;
 
 import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.ComponentMapper;
+import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector3;
 
@@ -16,6 +17,7 @@ public class InterpolationPositionComponent implements Component {
     public float duration;
 
     public InterpolationPositionComponent next;
+    public InterpolationCallback callback;
 
     public InterpolationPositionComponent(Interpolation interpolation,
                                           Vector3 from, Vector3 to,
@@ -37,5 +39,9 @@ public class InterpolationPositionComponent implements Component {
 
     public float getInterpolatedZ() {
         return interpolation.apply(from.z, to.z, elapsed / duration);
+    }
+
+    public interface InterpolationCallback {
+        void onInterpolationFinished(Entity entity);
     }
 }
