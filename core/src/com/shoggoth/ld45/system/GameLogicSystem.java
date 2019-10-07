@@ -2,6 +2,7 @@ package com.shoggoth.ld45.system;
 
 import com.badlogic.ashley.core.*;
 import com.badlogic.ashley.utils.ImmutableArray;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector3;
 import com.kothead.gdxjam.base.GdxJam;
@@ -101,6 +102,7 @@ public class GameLogicSystem extends EntitySystem {
                 manager.checkForNothing();
 
                 if (!SelectionSourceComponent.mapper.has(source)) {
+                    Gdx.app.log("Test", "Lost selection source component");
                     actionQueue.nextAction();
                 }
             } else {
@@ -143,6 +145,7 @@ public class GameLogicSystem extends EntitySystem {
     }
 
     private void stopPendingAction() {
+        Gdx.app.log("Test", "stopPendingAction()");
         pendingAction = false;
         actionQueue.nextAction();
         clearSelection();

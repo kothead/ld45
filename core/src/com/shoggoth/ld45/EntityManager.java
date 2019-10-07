@@ -49,14 +49,14 @@ public class EntityManager {
 
     public void registerSystems() {
         int priority = 0;
-        engine.addSystem(new InterpolationPositionSystem(priority++, screen, this));
+        engine.addSystem(new InterpolationPositionSystem(priority++, this));
         engine.addSystem(new InterpolationTintSystem(priority++));
         engine.addSystem(new InterpolationScaleSystem(priority++));
         engine.addSystem(new AISystem(priority++, screen, renderConfig));
         engine.addSystem(new InputSystem(priority++, screen, renderConfig));
         CameraControlSystem cameraControlSystem = new CameraControlSystem(priority++, screen, this);
         cameraControlSystem.setCameraLimits(new Rectangle(0, 0, renderConfig.getMaxWidth(), renderConfig.getMaxHeight()));
-        cameraControlSystem.setMaxCameraSpeed(500.0f);
+        cameraControlSystem.setMaxCameraSpeed(2000.0f);
         cameraControlSystem.setProcessing(false);
         engine.addSystem(cameraControlSystem);
 

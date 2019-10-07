@@ -3,7 +3,6 @@ package com.shoggoth.ld45.system;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector3;
 import com.kothead.gdxjam.base.component.FollowCameraComponent;
 import com.kothead.gdxjam.base.component.PositionComponent;
@@ -11,19 +10,16 @@ import com.kothead.gdxjam.base.system.RenderSystem;
 import com.shoggoth.ld45.EntityManager;
 import com.shoggoth.ld45.component.InterpolationPositionComponent;
 import com.shoggoth.ld45.component.TeamComponent;
-import com.shoggoth.ld45.screen.GameScreen;
 
 public class InterpolationPositionSystem extends IteratingSystem {
 
-    private GameScreen screen;
     private EntityManager manager;
 
-    public InterpolationPositionSystem(int priority, GameScreen screen, EntityManager manager) {
+    public InterpolationPositionSystem(int priority, EntityManager manager) {
         super(Family.all(
                 InterpolationPositionComponent.class,
                 PositionComponent.class
         ).get(), priority);
-        this.screen = screen;
         this.manager = manager;
     }
 
@@ -31,9 +27,8 @@ public class InterpolationPositionSystem extends IteratingSystem {
     public void update(float deltaTime) {
         if (getEntities().size() > 0) {
             Entity entity = getEntities().first();
-            Gdx.app.log("WAT", TeamComponent.mapper.get(entity).id + " vs " + screen.getActionQueue().getCurrentTeamId());
-            if (TeamComponent.mapper.get(entity).id == screen.getActionQueue().getCurrentTeamId()
-                && !screen.getActionQueue().getCurrentTeam().isPlayer()) {
+            if (TeamComponent.mapper.get(entity).id != 1
+                    && !FollowCameraComponent.mapper.has(entity)) {
                 manager.pause(InputSystem.class);
                 manager.resume(CameraControlSystem.class);
                 entity.add(new FollowCameraComponent());

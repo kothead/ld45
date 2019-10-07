@@ -5,6 +5,7 @@ import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.utils.ImmutableArray;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
@@ -37,10 +38,10 @@ public class CameraControlSystem extends EntitySystem {
 
     @Override
     public void setProcessing(boolean processing) {
-        super.setProcessing(processing);
-        if (processing) {
+        if (processing && !checkProcessing()) {
             origin = new Vector3(camera.position);
         }
+        super.setProcessing(processing);
     }
 
     public void setCameraLimits(Rectangle cameraLimits) {
@@ -54,7 +55,7 @@ public class CameraControlSystem extends EntitySystem {
     @Override
     public void addedToEngine(Engine engine) {
         super.addedToEngine(engine);
-        entities = engine.getEntitiesFor(Family.one(
+        entities = engine.getEntitiesFor(Family.all(
                 PositionComponent.class,
                 FollowCameraComponent.class)
                 .get());
@@ -72,8 +73,8 @@ public class CameraControlSystem extends EntitySystem {
             Vector2 size = new Vector2();
             if (SpriteComponent.mapper.has(entity)) {
                 Sprite sprite = SpriteComponent.mapper.get(entity).sprite;
-                size.x = sprite.getX();
-                size.y = sprite.getY();
+                size.x = sprite.getWidth();
+                size.y = sprite.getHeight();
             }
 
             x = position.x + size.x / 2;
@@ -91,12 +92,15 @@ public class CameraControlSystem extends EntitySystem {
             float dy = camera.position.y - y;
 
             float speed = maxCameraSpeed * deltaTime;
+            float hypot = (float) Math.hypot(dx, dy);
+            float sx = speed * dx / hypot;
+            float sy = speed * dy / hypot;
 
-            if (Math.abs(dx) > speed) {
-                x = camera.position.x - Math.signum(dx) * speed;
+            if (Math.abs(dx) > Math.abs(sx)) {
+                x = camera.position.x - sx;
             }
-            if (Math.abs(dy) > speed) {
-                y = camera.position.y - Math.signum(dy) * speed;
+            if (Math.abs(dy) > Math.abs(sy)) {
+                y = camera.position.y - sy;
             }
         }
 
@@ -106,7 +110,8 @@ public class CameraControlSystem extends EntitySystem {
         screen.shapes().setProjectionMatrix(screen.getCamera().combined);
         screen.batch().setProjectionMatrix(screen.getCamera().combined);
 
-        if (Math.abs(x - origin.x) < RETURN_INPUT_THRESHOLD
+        if (entities.size() == 0
+                && Math.abs(x - origin.x) < RETURN_INPUT_THRESHOLD
                 && Math.abs(y - origin.y) < RETURN_INPUT_THRESHOLD) {
             manager.pause(CameraControlSystem.class);
             manager.resume(InputSystem.class);
