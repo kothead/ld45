@@ -132,6 +132,8 @@ public class GameLogicSystem extends EntitySystem {
                 }
             }
         } else {
+            if (pendingAction) stopPendingAction();
+
             if (setSelectable(combine(
                     getCellsOfTeammate(nothings),
                     getCellsOfTeammate(spawners),
@@ -232,7 +234,6 @@ public class GameLogicSystem extends EntitySystem {
     private boolean isTeammateCreature(Entity card) {
         return CreatureComponent.mapper.has(card) && TeamComponent.mapper.has(card) && TeamComponent.mapper.get(card).id == actionQueue.getCurrentTeamId();
     }
-
 
     private List<Entity> setSelectable(Entity... entities) {
         return setSelectable(Arrays.asList(entities));

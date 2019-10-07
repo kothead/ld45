@@ -113,7 +113,6 @@ public class InputSystem extends EntitySystem implements InputProcessor {
                 if (entity != null && SelectableComponent.mapper.has(entity)) {
                     if (SelectionSourceComponent.mapper.has(entity)) {
                         entity.remove(SelectionSourceComponent.class);
-
                         resetCardForCell(entity);
                     } else if (hasSelectionSource()) {
                         entity.add(new SelectionTargetComponent());
