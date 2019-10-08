@@ -88,9 +88,10 @@ public class FieldHighlightRenderSystem extends IteratingSystem {
             setProcessing(false);
         }
 
-        if (alpha < THRESHOLD) {
+// sad
+//        if (alpha < THRESHOLD) {
             super.update(deltaTime);
-        }
+//        }
 
         screen.batch().begin();
         for (int i = 0; i < renderConfig.getFieldHeight(); i++) {
@@ -109,7 +110,15 @@ public class FieldHighlightRenderSystem extends IteratingSystem {
     @Override
     protected void processEntity(Entity entity, float deltaTime) {
         CellComponent cell = CellComponent.mapper.get(entity);
-        highlights[cell.getY()][cell.getX()] = SelectionSourceComponent.mapper.has(entity)
+        boolean oldValue = highlights[cell.getY()][cell.getX()];
+        boolean newValue = SelectionSourceComponent.mapper.has(entity)
                 || SelectableComponent.mapper.has(entity);
+
+        if (oldValue != newValue) {
+            elapsed = 0.0f;
+            isGoindBack = false;
+            alpha = 0f;
+        }
+        highlights[cell.getY()][cell.getX()] = newValue;
     }
 }

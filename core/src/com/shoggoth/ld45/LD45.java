@@ -51,6 +51,8 @@ public class LD45 extends GdxJamGame {
 						Assets.images.CURSEDGROUND,
 						Assets.images.SELECTOR,
 						Assets.images.DEMONIC,
+						Assets.images.DAMAGED1,
+						Assets.images.DAMAGED2,
 
 						Assets.images.DEVILFURIOUS,
 						Assets.images.DEVILHOLY,
