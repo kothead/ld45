@@ -33,139 +33,107 @@ public class AISystem extends SortedIteratingSystem {
         add(new Wave(3, new SpawnerComponent.Spawner() {
             @Override
             public Entity spawn(int x, int y) {
-                return spawn(x, y, 2);
-            }
-
-            @Override
-            public Entity spawn(int x, int y, int teamId) {
-                Entity entity = screen.getEntityManager().addSkeleton(x, y, teamId);
-                return entity;
+                return screen.getEntityManager().addSkeleton(x, y, 2);
             }
         }));
         add(new Wave(4, new SpawnerComponent.Spawner() {
             @Override
             public Entity spawn(int x, int y) {
-                return spawn(x, y, 2);
-            }
-
-            @Override
-            public Entity spawn(int x, int y, int teamId) {
-                Entity entity = screen.getEntityManager().addZombie(x, y, teamId);
-                return entity;
-            }
-        }));
-        add(new Wave(4, new SpawnerComponent.Spawner() {
-            @Override
-            public Entity spawn(int x, int y) {
-                return spawn(x, y, 2);
-            }
-
-            @Override
-            public Entity spawn(int x, int y, int teamId) {
-                Entity entity = screen.getEntityManager().addZombie(x, y, teamId);
-                HealthComponent.mapper.get(entity).health = 15;
-                return entity;
-            }
-        }, new SpawnerComponent.Spawner() {
-            @Override
-            public Entity spawn(int x, int y) {
-                return spawn(x, y, 2);
-            }
-
-            @Override
-            public Entity spawn(int x, int y, int teamId) {
-                Entity entity = screen.getEntityManager().addSkeleton(x, y, teamId);
-                HealthComponent.mapper.get(entity).health = 10;
+                Entity entity = screen.getEntityManager().addZombie(x, y, 2);
+                boostHealth(entity, (int) (Math.random() * 2));
                 return entity;
             }
         }));
         add(new Wave(5, new SpawnerComponent.Spawner() {
             @Override
             public Entity spawn(int x, int y) {
-                return spawn(x, y, 2);
+                Entity entity = screen.getEntityManager().addZombie(x, y, 2);
+                boostHealth(entity, (int) (Math.random() * 3));
+                boostDamage(entity, (int) (Math.random() * 3));
+                return entity;
             }
-
+        }, new SpawnerComponent.Spawner() {
             @Override
-            public Entity spawn(int x, int y, int teamId) {
-                Entity entity = screen.getEntityManager().addDemon(x, y, teamId);
+            public Entity spawn(int x, int y) {
+                Entity entity = screen.getEntityManager().addSkeleton(x, y, 2);
+                boostHealth(entity, (int) (Math.random() * 3));
+                boostDamage(entity, (int) (Math.random() * 3));
                 return entity;
             }
         }));
         add(new Wave(6, new SpawnerComponent.Spawner() {
             @Override
             public Entity spawn(int x, int y) {
-                return spawn(x, y, 2);
+                Entity entity = screen.getEntityManager().addDemon(x, y, 2);
+                boostHealth(entity, (int) (Math.random() * 4));
+                boostDamage(entity, (int) (Math.random() * 4));
+                return entity;
             }
-
+        }));
+        add(new Wave(7, new SpawnerComponent.Spawner() {
             @Override
-            public Entity spawn(int x, int y, int teamId) {
-                Entity entity = screen.getEntityManager().addZombie(x, y, teamId);
-                HealthComponent.mapper.get(entity).health = 20;
+            public Entity spawn(int x, int y) {
+                Entity entity = screen.getEntityManager().addZombie(x, y, 2);
+                boostHealth(entity, (int) (Math.random() * 4));
+                boostDamage(entity, (int) (Math.random() * 4));
                 return entity;
             }
         }, new SpawnerComponent.Spawner() {
             @Override
             public Entity spawn(int x, int y) {
-                return spawn(x, y, 2);
-            }
-
-            @Override
-            public Entity spawn(int x, int y, int teamId) {
-                Entity entity = screen.getEntityManager().addSkeleton(x, y, teamId);
-                HealthComponent.mapper.get(entity).health = 15;
+                Entity entity = screen.getEntityManager().addSkeleton(x, y, 2);
+                boostHealth(entity, (int) (Math.random() * 4));
+                boostDamage(entity, (int) (Math.random() * 4));
                 return entity;
             }
         }, new SpawnerComponent.Spawner() {
             @Override
             public Entity spawn(int x, int y) {
-                return spawn(x, y, 2);
-            }
-
-            @Override
-            public Entity spawn(int x, int y, int teamId) {
-                Entity entity = screen.getEntityManager().addDemon(x, y, teamId);
-                HealthComponent.mapper.get(entity).health = 12;
+                Entity entity = screen.getEntityManager().addDemon(x, y, 2);
+                boostHealth(entity, (int) (Math.random() * 4));
+                boostDamage(entity, (int) (Math.random() * 4));
                 return entity;
             }
         }));
         add(new Wave(10, new SpawnerComponent.Spawner() {
             @Override
             public Entity spawn(int x, int y) {
-                return spawn(x, y, 2);
-            }
-
-            @Override
-            public Entity spawn(int x, int y, int teamId) {
-                Entity entity = screen.getEntityManager().addZombie(x, y, teamId);
-                HealthComponent.mapper.get(entity).health = 25;
+                Entity entity = screen.getEntityManager().addZombie(x, y, 2);
+                boostHealth(entity, (int) (Math.random() * 4));
+                boostDamage(entity, (int) (Math.random() * 4));
                 return entity;
             }
         }, new SpawnerComponent.Spawner() {
             @Override
             public Entity spawn(int x, int y) {
-                return spawn(x, y, 2);
-            }
-
-            @Override
-            public Entity spawn(int x, int y, int teamId) {
-                Entity entity = screen.getEntityManager().addSkeleton(x, y, teamId);
-                HealthComponent.mapper.get(entity).health = 20;
+                Entity entity = screen.getEntityManager().addSkeleton(x, y, 2);
+                boostHealth(entity, (int) (Math.random() * 4));
+                boostDamage(entity, (int) (Math.random() * 4));
                 return entity;
             }
         }, new SpawnerComponent.Spawner() {
             @Override
             public Entity spawn(int x, int y) {
-                return spawn(x, y, 2);
-            }
-
-            @Override
-            public Entity spawn(int x, int y, int teamId) {
-                Entity entity = screen.getEntityManager().addDemon(x, y, teamId);
-                HealthComponent.mapper.get(entity).health = 15;
+                Entity entity = screen.getEntityManager().addDemon(x, y, 2);
+                boostHealth(entity, (int) (Math.random() * 4));
+                boostDamage(entity, (int) (Math.random() * 4));
                 return entity;
             }
         }));
     }};
+
+    private void boostHealth(Entity entity, int buf) {
+        HealthComponent component = HealthComponent.mapper.get(entity);
+        component.health += buf;
+        component.start += buf;
+        component.buff = buf;
+    }
+
+    private void boostDamage(Entity entity, int buf) {
+        DamageComponent component = DamageComponent.mapper.get(entity);
+        component.damage += buf;
+        component.buff = buf;
+    }
 
     private Wave currentWave;
 
@@ -231,7 +199,7 @@ public class AISystem extends SortedIteratingSystem {
         if (unitQueue.size() < currentWave.getLimit() && !currentWave.isAllSpawned()) {
             Vector2 position = getRandomEmptyCoordinate();
             if (position.x != -1 || position.y != -1) {
-                currentWave.spawn((int) position.x, (int) position.y, team.getId());
+                currentWave.spawn((int) position.x, (int) position.y);
                 Gdx.app.log("Test", "New unit at " + position.x + ", " + position.y);
                 actionQueue.nextAction();
                 return;
@@ -270,22 +238,19 @@ public class AISystem extends SortedIteratingSystem {
             Gdx.app.log("Test", "Path is empty, next action");
             cell.remove(SelectionSourceComponent.class);
             activateNext();
-            actionQueue.nextAction();
+//            actionQueue.nextAction();
+            if (switchesCount >= unitQueue.size()) {
+                Gdx.app.log("Test", "All units are passed, next action");
+                actionQueue.nextAction();
+            }
             return;
         }
 
         int x = (int) path.get(path.size() - 1).x;
         int y = (int) path.get(path.size() - 1).y;
         screen.getField()[y][x].add(new SelectionTargetComponent());
-        if (!FuriousComponent.mapper.has(card)) {
-            activateNext();
-        }
         Gdx.app.log("Test", "Moving: " + x + ", " + y + " is set to target");
-
-        if (switchesCount >= unitQueue.size()) {
-            Gdx.app.log("Test", "All units are passed, next action");
-            actionQueue.nextAction();
-        }
+        activateNext();
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.shoggoth.ld45.screen;
 
 import com.badlogic.ashley.core.Entity;
+import com.badlogic.ashley.core.Family;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
@@ -9,6 +10,8 @@ import com.kothead.gdxjam.base.GdxJamGame;
 import com.kothead.gdxjam.base.screen.BaseScreen;
 import com.kothead.gdxjam.base.screen.ScreenBuilder;
 import com.shoggoth.ld45.EntityManager;
+import com.shoggoth.ld45.component.CreatureComponent;
+import com.shoggoth.ld45.component.TeamComponent;
 import com.shoggoth.ld45.util.*;
 
 import java.util.List;
@@ -42,7 +45,8 @@ public class GameScreen extends BaseScreen {
 
     protected void layout(int width, int height) {
         Team players = new Team(1, 2, true);
-        Team enemies = new AITeam(2, 3);
+        Team enemies = new AITeam(2, 3,
+                GdxJam.engine().getEntitiesFor(Family.all(TeamComponent.class, CreatureComponent.class).get()));
         actionQueue = new ActionQueue(players, enemies);
 
         manager = new EntityManager(GdxJam.engine(), this, renderConfig, players, enemies);

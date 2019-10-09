@@ -10,10 +10,7 @@ import com.shoggoth.ld45.Assets;
 import com.shoggoth.ld45.EntityManager;
 import com.shoggoth.ld45.component.*;
 import com.shoggoth.ld45.screen.GameScreen;
-import com.shoggoth.ld45.system.AISystem;
-import com.shoggoth.ld45.system.FieldHighlightRenderSystem;
-import com.shoggoth.ld45.system.InputSystem;
-import com.shoggoth.ld45.system.SelectionInputSystem;
+import com.shoggoth.ld45.system.*;
 
 import java.util.List;
 
@@ -50,6 +47,7 @@ public class CardSelector {
         manager.pause(AISystem.class);
         manager.pause(InputSystem.class);
         manager.pause(FieldHighlightRenderSystem.class);
+        manager.pause(GameLogicSystem.class);
 
         Vector3 camera = screen.getCamera().position;
         int rowCount = cards.size() / CARDS_IN_ROW;
@@ -206,6 +204,7 @@ public class CardSelector {
                         manager.resume(InputSystem.class);
                         manager.resume(FieldHighlightRenderSystem.class);
                         manager.resume(AISystem.class);
+                        manager.resume(GameLogicSystem.class);
                     }
                 };
                 card.add(interpolationPosition);

@@ -6,12 +6,10 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.kothead.gdxjam.base.GdxJam;
 import com.kothead.gdxjam.base.component.SpriteComponent;
 import com.shoggoth.ld45.Assets;
-import com.shoggoth.ld45.component.CardComponent;
-import com.shoggoth.ld45.component.DamageComponent;
-import com.shoggoth.ld45.component.HealthComponent;
-import com.shoggoth.ld45.component.SpawnerComponent;
+import com.shoggoth.ld45.component.*;
 import com.shoggoth.ld45.util.CardSprite;
 
 import java.util.ArrayList;
@@ -33,11 +31,11 @@ public class SpriteUpdaterSystem extends IteratingSystem {
             boolean stop = false;
             List<AssetDescriptor<TextureRegion>> backgrounds = new ArrayList<>();
 
-            if (healthComponent != null) {
-                float relation = healthComponent.health / healthComponent.start;
-                if (relation < 0.3f) {
+            if (healthComponent != null && CreatureComponent.mapper.has(entity)) {
+                float relation = healthComponent.health / (float) healthComponent.start;
+                if (healthComponent.health < 4) {
                     sprite.setDamage(Assets.images.DAMAGED2);
-                } else if (relation < 0.7f) {
+                } else if (relation < 1f) {
                     sprite.setDamage(Assets.images.DAMAGED1);
                 } else {
                     sprite.setDamage(null);

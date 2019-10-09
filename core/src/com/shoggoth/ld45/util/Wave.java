@@ -23,9 +23,9 @@ public class Wave {
         return limit == counter;
     }
 
-    public void spawn(int x, int y, int teamId) {
+    public void spawn(int x, int y) {
         int index = LD45.random.nextInt(spawners.length);
-        spawners[index].spawn(x, y, teamId);
+        spawners[index].spawn(x, y);
         counter++;
     }
 }

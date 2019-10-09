@@ -108,19 +108,31 @@ public class InputSystem extends EntitySystem implements InputProcessor {
             GdxJam.assets().get(Assets.sounds.TAP).play();
 
             Vector3 position = countPosition(lastLeftTouch.x, lastLeftTouch.y);
+            Entity source = getSelectionSource();
+            boolean deselectSource = false;
+
             if (position.x >= 0 && position.y >= 0) {
                 Entity entity = screen.getField()[(int) position.y][(int) position.x];
                 if (entity != null && SelectableComponent.mapper.has(entity)) {
                     if (SelectionSourceComponent.mapper.has(entity)) {
-                        entity.remove(SelectionSourceComponent.class);
-                        resetCardForCell(entity);
-                    } else if (hasSelectionSource()) {
+                        deselectSource = true;
+                    } else if (source != null) {
                         entity.add(new SelectionTargetComponent());
                     } else {
                         entity.add(new SelectionSourceComponent());
                     }
+                } else {
+                    deselectSource = true;
                 }
+            } else {
+                deselectSource = true;
             }
+
+            if (source != null && deselectSource) {
+                source.remove(SelectionSourceComponent.class);
+                resetCardForCell(source);
+            }
+
             isClicked = false;
         }
     }
@@ -221,13 +233,13 @@ public class InputSystem extends EntitySystem implements InputProcessor {
         return false;
     }
 
-    public boolean hasSelectionSource() {
+    public Entity getSelectionSource() {
         for (int i = 0; i < renderConfig.getFieldHeight(); i++) {
             for (int j = 0; j < renderConfig.getFieldWidth(); j++) {
                 Entity entity = screen.getField()[i][j];
-                if (SelectionSourceComponent.mapper.has(entity)) return true;
+                if (SelectionSourceComponent.mapper.has(entity)) return entity;
             }
         }
-        return false;
+        return null;
     }
 }

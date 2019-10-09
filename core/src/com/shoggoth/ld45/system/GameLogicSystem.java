@@ -3,6 +3,7 @@ package com.shoggoth.ld45.system;
 import com.badlogic.ashley.core.*;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector3;
 import com.kothead.gdxjam.base.GdxJam;
@@ -125,6 +126,8 @@ public class GameLogicSystem extends EntitySystem {
                             ),
                             Arrays.asList(source)
                     )).size() == 1 && pendingAction) {
+                        Gdx.app.log("test", "SPAWNER");
+                        SpawnerComponent.mapper.get(sourceCard).spawned = 0;
                         stopPendingAction();
                     }
                 } else if (isTeammateCreature(sourceCard)) {
@@ -135,18 +138,23 @@ public class GameLogicSystem extends EntitySystem {
                             ),
                             Arrays.asList(source)
                     )).size() == 1 && pendingAction) {
+                        Gdx.app.log("test", "NOTHING TO SELECT AS TARGET");
                         stopPendingAction();
                     }
                 }
             }
         } else {
-            if (pendingAction) stopPendingAction();
+            if (pendingAction) {
+                Gdx.app.log("test", "PENDING ACTION WITHOUT SOURCE");
+                stopPendingAction();
+            }
 
             if (setSelectable(combine(
                     getCellsOfTeammate(nothings),
                     getCellsOfTeammate(spawners),
                     getCellsOfTeammate(creatures)
             )).size() == 0) {
+                Gdx.app.log("test", "NOTHING TO SELECT AS SOURCE FOR PLAYER");
                 stopPendingAction();
             };
         }
@@ -298,6 +306,8 @@ public class GameLogicSystem extends EntitySystem {
     private void move(final Entity card, final Entity cell) {
         manager.pause(FieldHighlightRenderSystem.class);
         manager.pause(AISystem.class);
+        manager.pause(InputSystem.class);
+        manager.pause(GameLogicSystem.class);
         setSelectable();
         clearSelection();
 
@@ -321,6 +331,8 @@ public class GameLogicSystem extends EntitySystem {
                 if (oldNothing != null) getEngine().removeEntity(oldNothing);
                 manager.resume(FieldHighlightRenderSystem.class);
                 manager.resume(AISystem.class);
+                manager.resume(InputSystem.class);
+                manager.resume(GameLogicSystem.class);
             }
         };
         card.add(interpolationPosition);
@@ -341,6 +353,8 @@ public class GameLogicSystem extends EntitySystem {
         GdxJam.assets().get(Assets.sounds.SPAWN).play();
         manager.pause(FieldHighlightRenderSystem.class);
         manager.pause(AISystem.class);
+        manager.pause(InputSystem.class);
+        manager.pause(GameLogicSystem.class);
         setSelectable();
         cell.remove(SelectionTargetComponent.class);
 
@@ -363,6 +377,8 @@ public class GameLogicSystem extends EntitySystem {
                 if (oldNothing != null) getEngine().removeEntity(oldNothing);
                 manager.resume(FieldHighlightRenderSystem.class);
                 manager.resume(AISystem.class);
+                manager.resume(InputSystem.class);
+                manager.resume(GameLogicSystem.class);
             }
         };
         spawned.add(component);
@@ -371,6 +387,7 @@ public class GameLogicSystem extends EntitySystem {
         if (spawnerComponent.spawned < spawnerComponent.spawnCount) {
             pendingAction = true;
         } else {
+            pendingAction = false;
             clearSelection();
             spawnerComponent.spawned = 0;
         }
@@ -379,6 +396,8 @@ public class GameLogicSystem extends EntitySystem {
     private void attack(final Entity source, final Entity target) {
         manager.pause(FieldHighlightRenderSystem.class);
         manager.pause(AISystem.class);
+        manager.pause(InputSystem.class);
+        manager.pause(GameLogicSystem.class);
         setSelectable();
         Entity cell = AttachComponent.mapper.get(target).entity;
         cell.remove(SelectionTargetComponent.class);
@@ -422,6 +441,8 @@ public class GameLogicSystem extends EntitySystem {
                 }
                 manager.resume(FieldHighlightRenderSystem.class);
                 manager.resume(AISystem.class);
+                manager.resume(InputSystem.class);
+                manager.resume(GameLogicSystem.class);
             }
         };
         source.add(component);

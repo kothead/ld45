@@ -3,6 +3,7 @@ package com.shoggoth.ld45.system;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector3;
 import com.kothead.gdxjam.base.component.FollowCameraComponent;
 import com.kothead.gdxjam.base.component.PositionComponent;
@@ -65,11 +66,14 @@ public class InterpolationPositionSystem extends IteratingSystem {
         }
 
         if (component.elapsed >= component.duration) {
+//            Gdx.app.log("test", "Ending animation interpolation position system");
+
             position.set(component.to);
             entity.remove(InterpolationPositionComponent.class);
             forceSortZ();
 
             if (component.callback != null) {
+//                Gdx.app.log("test", "Starting callback");
                 component.callback.onInterpolationFinished(entity);
             }
 

@@ -3,6 +3,7 @@ package com.shoggoth.ld45;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetDescriptor;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -20,6 +21,8 @@ import com.shoggoth.ld45.util.CardSprite;
 import com.shoggoth.ld45.util.RenderConfig;
 import com.shoggoth.ld45.util.Team;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 
 public class EntityManager {
@@ -73,6 +76,12 @@ public class EntityManager {
     }
 
     public <T extends EntitySystem> void pause(Class<T> systemType) {
+//        if (systemType == AISystem.class) {
+//            StringWriter sw = new StringWriter();
+//            new Exception().printStackTrace(new PrintWriter(sw));
+//
+//            Gdx.app.log("test", systemType.getSimpleName() + " is paused " + sw.toString());
+//        }
         if (systemType == FieldHighlightRenderSystem.class) {
             engine.getSystem(FieldHighlightRenderSystem.class).stopSlowly();
         } else {
@@ -81,6 +90,9 @@ public class EntityManager {
     }
 
     public <T extends EntitySystem> void resume(Class<T> systemType) {
+        if (systemType == AISystem.class) {
+            Gdx.app.log("test", systemType.getSimpleName() + " is resumed");
+        }
         engine.getSystem(systemType).setProcessing(true);
     }
 

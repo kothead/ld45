@@ -37,6 +37,5 @@ public class SpawnerComponent implements Component {
 
     public static abstract class Spawner {
         public abstract Entity spawn(int x, int y);
-        public Entity spawn(int x, int y, int teamId) {return null;};
     }
 }
