@@ -30,6 +30,7 @@ public class InputSystem extends EntitySystem implements InputProcessor {
     private Vector2 lastLeftTouch = new Vector2();
     private Vector2 lastRightTouch = new Vector2();
     private Vector2 delta = new Vector2(0, 0);
+    private boolean wasTouchDraggedCalledThisTick = false;
     private boolean isDragging = false;
     private boolean isClicked = false;
 
@@ -49,6 +50,8 @@ public class InputSystem extends EntitySystem implements InputProcessor {
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
+
+        wasTouchDraggedCalledThisTick = false;
 
         Camera camera = screen.getCamera();
         boolean updated = false;
@@ -171,9 +174,11 @@ public class InputSystem extends EntitySystem implements InputProcessor {
         if (button == Input.Buttons.LEFT) {
             isClicked = true;
             lastLeftTouch.set(screenX, screenY);
+            return true;
         } else if (button == Input.Buttons.RIGHT) {
             isDragging = true;
             lastRightTouch.set(screenX, screenY);
+            return true;
         }
         return false;
     }
@@ -204,6 +209,7 @@ public class InputSystem extends EntitySystem implements InputProcessor {
 
         if (button == Input.Buttons.RIGHT) {
             isDragging = false;
+            return true;
         }
         return false;
     }
@@ -212,13 +218,18 @@ public class InputSystem extends EntitySystem implements InputProcessor {
     public boolean touchDragged(int screenX, int screenY, int pointer) {
         if (!checkProcessing()) return false;
 
-        if (isDragging) {
+        if (!wasTouchDraggedCalledThisTick && isDragging) {
+            // for some reason touchDragged in HTML-version called twice
+            // and the second time at the same position, so here goes crutch
+            wasTouchDraggedCalledThisTick = true;
+
             Vector2 newTouch = new Vector2(screenX, screenY);
             // delta will now hold the difference between the last and the current touch positions
             // delta.x > 0 means the touch moved to the right, delta.x < 0 means a move to the left
             delta = newTouch.cpy().sub(lastRightTouch);
 
             lastRightTouch = newTouch;
+            return true;
         }
         return false;
     }

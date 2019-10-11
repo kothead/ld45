@@ -168,7 +168,7 @@ public class GameLogicSystem extends EntitySystem {
     }
 
     private List<Entity> getCellsOf(Iterable<Entity> entities) {
-        List<Entity> result = new ArrayList<>();
+        List<Entity> result = new ArrayList<Entity>();
         for (Entity entity: entities) {
             if (AttachComponent.mapper.has(entity)) {
                 result.add(AttachComponent.mapper.get(entity).entity);
@@ -178,7 +178,7 @@ public class GameLogicSystem extends EntitySystem {
     }
 
     private List<Entity> getCellsOfTeammate(Iterable<Entity> entities) {
-        List<Entity> result = new ArrayList<>();
+        List<Entity> result = new ArrayList<Entity>();
         for (Entity entity: entities) {
             if (AttachComponent.mapper.has(entity) && isTeammate(entity)) {
                 result.add(AttachComponent.mapper.get(entity).entity);
@@ -188,7 +188,7 @@ public class GameLogicSystem extends EntitySystem {
     }
 
     private List<Entity> combine(Collection<Entity>... collections) {
-        List<Entity> result = new ArrayList<>();
+        List<Entity> result = new ArrayList<Entity>();
         for (Collection<Entity> collection: collections) {
             result.addAll(collection);
         }
@@ -202,7 +202,7 @@ public class GameLogicSystem extends EntitySystem {
      */
     private List<Entity> adjacent(Entity entity, Direction[] directions) {
         CellComponent component = CellComponent.mapper.get(entity);
-        List<Entity> result = new ArrayList<>();
+        List<Entity> result = new ArrayList<Entity>();
         for (Direction direction: directions) {
             int x = component.getX() + direction.getDx();
             int y = component.getY() + direction.getDy();
@@ -291,7 +291,7 @@ public class GameLogicSystem extends EntitySystem {
         }
 
         int teamId = actionQueue.getCurrentTeamId();
-        List<Entity> cards = new ArrayList<>();
+        List<Entity> cards = new ArrayList<Entity>();
         cards.add(manager.addBloodRiver(teamId));
         cards.add(manager.addCursedGround(teamId));
         cards.add(manager.addDemonicPresence(teamId));

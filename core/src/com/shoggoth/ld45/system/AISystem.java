@@ -27,7 +27,7 @@ public class AISystem extends SortedIteratingSystem {
 
     private int lastUnitId = -1;
     private int switchesCount = 0;
-    private List<Entity> unitQueue = new ArrayList<>();
+    private List<Entity> unitQueue = new ArrayList<Entity>();
 
     private Queue<Wave> waves = new ArrayDeque<Wave>() {{
         add(new Wave(3, new SpawnerComponent.Spawner() {
@@ -263,7 +263,7 @@ public class AISystem extends SortedIteratingSystem {
     }
 
     private List<Vector2> getPathToNearestEnemyCard(Entity cell, AITeam team) {
-        List<Vector2> resultPath = new ArrayList<>();
+        List<Vector2> resultPath = new ArrayList<Vector2>();
         CellComponent cellComponent = CellComponent.mapper.get(cell);
 
         int[][] path = new int[config.getFieldHeight()][config.getFieldWidth()];
@@ -273,7 +273,7 @@ public class AISystem extends SortedIteratingSystem {
             }
         }
 
-        Queue<Vector2> queue = new ArrayDeque<>();
+        Queue<Vector2> queue = new ArrayDeque<Vector2>();
         queue.add(new Vector2(cellComponent.getX(), cellComponent.getY()));
 
         path[cellComponent.getY()][cellComponent.getX()] = 0;
@@ -394,7 +394,7 @@ public class AISystem extends SortedIteratingSystem {
     }
 
     private List<Entity> getCellsWithEnemies(Team team) {
-        List<Entity> result = new ArrayList<>();
+        List<Entity> result = new ArrayList<Entity>();
         for (Entity entity : teamCards) {
             if (TeamComponent.mapper.get(entity).id != team.getId()) {
                 result.add(AttachComponent.mapper.get(entity).entity);

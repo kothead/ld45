@@ -4,8 +4,14 @@
 	<inherits name='com.badlogic.gdx.backends.gdx_backends_gwt' />
 	<inherits name='com.badlogic.ashley_gwt' />
 	<inherits name='com.badlogic.gdx.ai' />
+	<inherits name='com.kothead.gdxjam.base' />
+	<inherits name="com.google.gwt.logging.Logging"/>
 
 	<inherits name='LD45' />
+
+	<extend-configuration-property name="gdx.reflect.include" value="com.badlogic.gdx.graphics.g2d.Animation" />
+	<extend-configuration-property name="gdx.reflect.include" value="com.kothead.gdxjam.base.data.loader.TextureAnimationLoader" />
+
 	<entry-point class='com.shoggoth.ld45.client.HtmlLauncher' />
 	<set-configuration-property name='xsiframe.failIfScriptTag' value='FALSE'/>
 	<set-configuration-property name="gdx.assetpath" value="../android/assets" />

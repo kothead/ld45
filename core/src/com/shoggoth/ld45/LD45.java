@@ -1,5 +1,6 @@
 package com.shoggoth.ld45;
 
+import com.badlogic.gdx.Gdx;
 import com.kothead.gdxjam.base.GdxJamGame;
 import com.kothead.gdxjam.base.context.DefaultContext;
 import com.kothead.gdxjam.base.data.GdxJamConfiguration;
@@ -7,6 +8,8 @@ import com.kothead.gdxjam.base.screen.LoadingScreen;
 import com.shoggoth.ld45.screen.GameScreen;
 
 import java.util.Random;
+
+import static com.badlogic.gdx.Application.LOG_INFO;
 
 public class LD45 extends GdxJamGame {
 
@@ -20,6 +23,7 @@ public class LD45 extends GdxJamGame {
 	public void create () {
 		super.create();
 		showGameScreen();
+//		Gdx.app.setLogLevel(LOG_INFO);
 	}
 
 	public void showGameScreen() {

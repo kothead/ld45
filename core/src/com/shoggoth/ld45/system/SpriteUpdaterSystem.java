@@ -29,7 +29,7 @@ public class SpriteUpdaterSystem extends IteratingSystem {
             HealthComponent healthComponent = HealthComponent.mapper.get(entity);
 
             boolean stop = false;
-            List<AssetDescriptor<TextureRegion>> backgrounds = new ArrayList<>();
+            List<AssetDescriptor<TextureRegion>> backgrounds = new ArrayList<AssetDescriptor<TextureRegion>>();
 
             if (healthComponent != null && CreatureComponent.mapper.has(entity)) {
                 float relation = healthComponent.health / (float) healthComponent.start;

@@ -4,10 +4,15 @@
 	<inherits name='com.badlogic.gdx.backends.gdx_backends_gwt' />
 	<inherits name='com.badlogic.ashley_gwt' />
 	<inherits name='com.badlogic.gdx.ai' />
+	<inherits name='com.kothead.gdxjam.base' />
+	<inherits name="com.google.gwt.logging.Logging"/>
 
     <inherits name='com.shoggoth.ld45.GdxDefinition' />
     
     <collapse-all-properties />
+
+	<extend-configuration-property name="gdx.reflect.include" value="com.badlogic.gdx.graphics.g2d.Animation" />
+	<extend-configuration-property name="gdx.reflect.include" value="com.kothead.gdxjam.base.data.loader.TextureAnimationLoader" />
     
 	<add-linker name="xsiframe"/>	
 	<set-configuration-property name="devModeRedirectEnabled" value="true"/>

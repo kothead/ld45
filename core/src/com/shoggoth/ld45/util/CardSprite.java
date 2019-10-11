@@ -32,7 +32,7 @@ public class CardSprite extends Sprite {
     }
 
     public void setBackgroundCosmetics(List<AssetDescriptor<TextureRegion>> assets) {
-        backgroundCosmetics = new ArrayList<>();
+        backgroundCosmetics = new ArrayList<Sprite>();
         for (AssetDescriptor<TextureRegion> asset : assets) {
             backgroundCosmetics.add(new Sprite(GdxJam.assets().get(asset)));
         }
